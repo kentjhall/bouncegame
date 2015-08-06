@@ -35,18 +35,17 @@ public class Grid {
     private Random generator;
     private int hitX;
     private int hitY;
-    private boolean once;
-    private Texture square;
-    private Texture squareW;
     private boolean[] bounceBlock;
     private int blockRarity;
     private ArrayList<Integer> gjPattern;
     private TextureAtlas atlas;
     private BitmapFont font;
     private Vector2 velocity;
-    private int sideHitX;
-    private int sideHitY;
     private int direction;
+    private Texture square;
+    private Texture squareW;
+    private int growWidth;
+    private int growHeight;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
@@ -57,13 +56,15 @@ public class Grid {
         generator = new Random();
         rand=new int[45];
         bounceBlock=new boolean [45];
-        square=new Texture("square.png");
-        squareW=new Texture("squareW.png");
         blockRarity=2;
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
         atlas=new TextureAtlas();
         font = new BitmapFont(Gdx.files.internal("fontB36.fnt"), atlas.findRegion("fontB36.png"), false);
         velocity=new Vector2(0, 0);
+        square=new Texture("square.png");
+        squareW=new Texture("squareW.png");
+        growWidth=0;
+        growHeight=0;
         //initialize rand and bounceBlock
         for(int i=0; i<rand.length;i++){
             rand[i]=2;
@@ -485,29 +486,15 @@ public class Grid {
                     hitX=column1-height/2;
                     break;
             }
-            //sets which velocity block comes from
-            if (hitX>=this.width/2 && direction==0){
-                sideHitX=hitX+this.width;
-                velocity.x=-5;
-            }
-            else if (hitX<this.width/2 && direction==0){
-                sideHitX=hitX-this.width;
-                velocity.x=5;
-            }
-            else if (hitY>=Gdx.graphics.getHeight()/2 && direction==1){
-                sideHitY=hitY+Gdx.graphics.getHeight();
-                velocity.y=-5;
-            }
-            else if (hitY<Gdx.graphics.getHeight()/2 && direction==1){
-                sideHitY=hitY-Gdx.graphics.getHeight();
-                velocity.y=5;
-            }
-
             if (rand[boxCount]==0 && boxCount!=29){
+                System.out.println("width, "+growWidth);
+                System.out.println("height, "+growHeight);
                 batch.draw(square, hitX, hitY, width, height);
+                growWidth++;
+                growHeight++;
                 bounceBlock[boxCount]=true;
             }
-            hitBox[boxCount] = new Rectangle(hitX, hitY, width, height);
+            hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
             if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer().x, MyGdxGame.getPlayer().getLocPlayer().y) && MyGdxGame.getPlayer().getHitGround()==true){
                 if (bounceBlock[boxCount] != true) {
@@ -533,7 +520,6 @@ public class Grid {
         }
         for (int i=0;i<arrayList.size();i++){
             rand[arrayList.get(i)]=0;
-            System.out.println(arrayList.get(i));
         }
     }
 
