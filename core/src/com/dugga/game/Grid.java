@@ -1,24 +1,18 @@
 package com.dugga.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.TimerTask;
 
 /**
  * Created by student on 7/30/2015.
@@ -41,11 +35,14 @@ public class Grid {
     private TextureAtlas atlas;
     private BitmapFont font;
     private Vector2 velocity;
-    private int direction;
     private Texture square;
     private Texture squareW;
-    private int growWidth;
-    private int growHeight;
+    private double growWidth;
+    private double growHeight;
+    private boolean growing;
+    private TextureAtlas.AtlasRegion region;
+    private Sprite bounceSquare;
+    private int[] bounceTracker;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
@@ -56,6 +53,7 @@ public class Grid {
         generator = new Random();
         rand=new int[45];
         bounceBlock=new boolean [45];
+        bounceTracker=new int[45];
         blockRarity=2;
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
         atlas=new TextureAtlas();
@@ -93,12 +91,14 @@ public class Grid {
             rand[41]=0;
             rand[42]=0;
             bounceBlock[i]=false;
+            bounceTracker[i]=0;
         }
     }
 
     public void draw(SpriteBatch batch){
         createHitBoxes(width / 5, height / 5, batch);
         updateGround();
+        blockTransition();
     }
 
     public void createHitBoxes(int width, int height, SpriteBatch batch){
@@ -487,20 +487,28 @@ public class Grid {
                     break;
             }
             if (rand[boxCount]==0 && boxCount!=29){
-                System.out.println("width, "+growWidth);
-                System.out.println("height, "+growHeight);
-                batch.draw(square, hitX, hitY, width, height);
-                growWidth++;
-                growHeight++;
+                region=new TextureAtlas.AtlasRegion(square, hitX, hitY, width, height);
+                bounceSquare=new Sprite(region);
+                bounceSquare.setOriginCenter();
+                bounceSquare.setPosition(hitX, hitY);
+                bounceSquare.setScale((float)growWidth, (float)growHeight);
+                bounceSquare.draw(batch);
+                //batch.draw(square, hitX, hitY, growWidth, growHeight);
                 bounceBlock[boxCount]=true;
             }
             hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
-            if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer().x, MyGdxGame.getPlayer().getLocPlayer().y) && MyGdxGame.getPlayer().getHitGround()==true){
-                if (bounceBlock[boxCount] != true) {
+            if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer().x, MyGdxGame.getPlayer().getLocPlayer().y) && MyGdxGame.getPlayer().getHitGround()){
+                if (!bounceBlock[boxCount]) {
+                    if (bounceTracker[boxCount]>0) {
+                        bounceTracker[boxCount]--;
+                    }
                     MyGdxGame.getPlayer().setDead(true);
                 }
-                else{
+                else if (bounceBlock[boxCount]){
+                    if (bounceTracker[boxCount]<2) {
+                        bounceTracker[boxCount]++;
+                    }
                     if (MyGdxGame.getPlayer().getScore()%5==0 && MyGdxGame.getPlayer().getScore()!=0){
                         blockRarity++;
                     }
@@ -529,16 +537,39 @@ public class Grid {
                 @Override
                 public void run() {
                     if (MyGdxGame.getPlayer().getScore()%10==0){
+                        if (growWidth>=0.9 && growHeight>=0.9){
+                            growing=false;
+                        }
                         makePattern(gjPattern);
                     }
                     else {
-                        for (int i = 0; i < rand.length; i++) {
-                            rand[i]=generator.nextInt(blockRarity);
-                            direction=generator.nextInt(2);
+                        if (growWidth>=0.9 && growHeight>=0.9){
+                            growing=false;
                         }
+
                     }
                 }
             }, (float) 1.25);
+        }
+        if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore()%10 != 0){
+            for (int i = 0; i < rand.length; i++) {
+                rand[i] = generator.nextInt(blockRarity);
+            }
+        }
+    }
+
+    public void blockTransition(){
+        System.out.println(growWidth);
+        if (growWidth<0 && growHeight<0) {
+            growing=true;
+        }
+        if (growing && growWidth<=0.9 && growHeight<=0.9){
+            growWidth+=0.1;
+            growHeight+=0.1;
+        }
+        else if (!growing){
+            growWidth-=0.1;
+            growHeight-=0.1;
         }
     }
 
