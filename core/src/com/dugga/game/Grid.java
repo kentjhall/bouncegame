@@ -21,9 +21,6 @@ import java.util.Random;
  * Created by student on 7/30/2015.
  */
 public class Grid {
-    private Texture img;
-    private int locX;
-    private int locY;
     private int width;
     private int height;
     private int boxCount;
@@ -35,9 +32,10 @@ public class Grid {
     private boolean[] bounceBlock;
     private int blockRarity;
     private ArrayList<Integer> gjPattern;
+    private ArrayList<Integer> smilePattern;
+    private ArrayList<Integer> tenPattern;
     private TextureAtlas atlas;
     private BitmapFont font;
-    private Vector2 velocity;
     private Texture square;
     private Texture squareW;
     private double growWidth;
@@ -46,21 +44,20 @@ public class Grid {
     private TextureAtlas.AtlasRegion region;
     private Sprite bounceSquare;
     private int emptyBox;
+    private boolean refresh;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
         height=width;
-        this.locX=locX - this.width/2;
-        this.locY=locY - this.height/2;
-        img=new Texture("grid.gif");
         generator = new Random();
         rand=new int[45];
         bounceBlock=new boolean [45];
         blockRarity=2;
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
+        smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
+        tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
         atlas=new TextureAtlas();
         font = new BitmapFont(Gdx.files.internal("fontB36.fnt"), atlas.findRegion("fontB36.png"), false);
-        velocity=new Vector2(0, 0);
         square=new Texture("square.png");
         squareW=new Texture("squareW.png");
         growWidth=0;
@@ -532,17 +529,28 @@ public class Grid {
 
     public void updateGround(){
         if (MyGdxGame.getPlayer().getHitGround()) {
+            final int patternChange=generator.nextInt(3);
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     if (MyGdxGame.getPlayer().getScore() % 10 == 0) {
-                            if (growWidth >= 0.9 && growHeight >= 0.9) {
-                                growing = false;
-                            }
-                        makePattern(gjPattern);
+                        if (growWidth >= 0.9 && growHeight >= 0.9) {
+                            growing = false;
+                        }
+                        switch(patternChange){
+                            case 0:
+                                makePattern(gjPattern);
+                                break;
+                            case 1:
+                                makePattern(smilePattern);
+                                break;
+                            case 2:
+                                makePattern(tenPattern);
+                                break;
+                        }
                     } else {
                         if (growWidth >= 0.9 && growHeight >= 0.9) {
-                                    growing = false;
+                            growing = false;
                         }
                     }
                 }
