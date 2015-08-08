@@ -28,6 +28,7 @@ public class Player {
     private boolean hitGround;
     private boolean dead;
     private int score;
+    private double bounceSpeed;
 
 
     public Player(int locX, int locY){
@@ -44,14 +45,16 @@ public class Player {
         score=0;
         startAccelX=0;
         startAccelY=0;
+        bounceSpeed=2;
     }
 
     public void draw(SpriteBatch batch){
         batch.draw(img, locPlayer.x-width/2, locPlayer.y-height/2, width, height);
         tilt();
         bounce();
+        wrap();
 
-        if (width==minWidth && height==minHeight){
+        if (width<=minWidth && height<=minHeight){
             hitGround=true;
         }
         else{
@@ -161,31 +164,47 @@ public class Player {
 
     public void bounce(){
         //when ball at largest point, start shrinking
-        if (width==maxWidth && height==maxHeight){
+        if (width>=maxWidth && height>=maxHeight){
             growing=false;
         }
         //when ball at smallest point, start growing
-        else if (width==minWidth && height==minHeight){
-            if (dead==true){
+        else if (width<=minWidth && height<=minHeight){
+            if (dead){
                 growing=false;
             }
-            else if (dead==false){
+            else if (!dead){
                 growing=true;
                 score++;
             }
         }
 
         //when ball is going down
-        if (growing==false){
+        if (!growing){
             if (width>0 && height>0) {
-                width -= 2;
-                height -= 2;
+                width-=bounceSpeed;
+                height-=bounceSpeed;
             }
         }
         //when ball is going up
         else{
-            width+=2;
-            height+=2;
+            width+=bounceSpeed;
+            height+=bounceSpeed;
+        }
+    }
+
+    public void wrap(){
+        if (locPlayer.x+width/2<0){
+            locPlayer.x=Gdx.graphics.getWidth()+width/2;
+        }
+        if (locPlayer.x-width/2>Gdx.graphics.getWidth()){
+            locPlayer.x=0-width/2;
+        }
+
+        if (locPlayer.y+height/2<0){
+            locPlayer.y=Gdx.graphics.getHeight()+height/2;
+        }
+        if (locPlayer.y-height/2>Gdx.graphics.getHeight()){
+            locPlayer.y=0-height/2;
         }
     }
 
@@ -219,5 +238,13 @@ public class Player {
 
     public int getScore(){
         return score;
+    }
+
+    public void setBounceSpeed(double bounceSpeed){
+        this.bounceSpeed=bounceSpeed;
+    }
+
+    public double getBounceSpeed(){
+        return bounceSpeed;
     }
 }

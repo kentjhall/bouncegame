@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
@@ -42,7 +45,7 @@ public class Grid {
     private boolean growing;
     private TextureAtlas.AtlasRegion region;
     private Sprite bounceSquare;
-    private int[] bounceTracker;
+    private int emptyBox;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
@@ -53,7 +56,6 @@ public class Grid {
         generator = new Random();
         rand=new int[45];
         bounceBlock=new boolean [45];
-        bounceTracker=new int[45];
         blockRarity=2;
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
         atlas=new TextureAtlas();
@@ -91,7 +93,6 @@ public class Grid {
             rand[41]=0;
             rand[42]=0;
             bounceBlock[i]=false;
-            bounceTracker[i]=0;
         }
     }
 
@@ -358,6 +359,7 @@ public class Grid {
                     hitY=row1a-width/2;
                     hitX=column5-height/2;
 
+                    emptyBox=boxCount;
                     batch.draw(squareW, hitX, hitY, width, height);
                     font.draw(batch, ""+MyGdxGame.getPlayer().getScore(), hitX+width/2, hitY+height/2);
                     break;
@@ -486,39 +488,36 @@ public class Grid {
                     hitX=column1-height/2;
                     break;
             }
-            if (rand[boxCount]==0 && boxCount!=29){
+
+            if (rand[boxCount]==0 && boxCount!=emptyBox){
                 region=new TextureAtlas.AtlasRegion(square, hitX, hitY, width, height);
                 bounceSquare=new Sprite(region);
                 bounceSquare.setOriginCenter();
                 bounceSquare.setPosition(hitX, hitY);
-                bounceSquare.setScale((float)growWidth, (float)growHeight);
+                bounceSquare.setScale((float) growWidth, (float) growHeight);
                 bounceSquare.draw(batch);
-                //batch.draw(square, hitX, hitY, growWidth, growHeight);
                 bounceBlock[boxCount]=true;
             }
+
             hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
             if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer().x, MyGdxGame.getPlayer().getLocPlayer().y) && MyGdxGame.getPlayer().getHitGround()){
                 if (!bounceBlock[boxCount]) {
-                    if (bounceTracker[boxCount]>0) {
-                        bounceTracker[boxCount]--;
-                    }
                     MyGdxGame.getPlayer().setDead(true);
                 }
                 else if (bounceBlock[boxCount]){
-                    if (bounceTracker[boxCount]<2) {
-                        bounceTracker[boxCount]++;
+                    if (MyGdxGame.getPlayer().getScore()%10==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=10){
+                        blockRarity+=1;
                     }
-                    if (MyGdxGame.getPlayer().getScore()%5==0 && MyGdxGame.getPlayer().getScore()!=0){
-                        blockRarity++;
+                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0 && MyGdxGame.getPlayer().getBounceSpeed()!=5){
+                        MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.05);
                     }
                 }
             }
-            if (bounceBlock[boxCount] == true) {
+            if (bounceBlock[boxCount]) {
                 bounceBlock[boxCount] = false;
             }
         }
-
     }
 
     //allows me to make a pattern of blocks simply by inputting their numbers into this function through and arraylist
@@ -536,20 +535,18 @@ public class Grid {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    if (MyGdxGame.getPlayer().getScore()%10==0){
-                        if (growWidth>=0.9 && growHeight>=0.9){
-                            growing=false;
-                        }
+                    if (MyGdxGame.getPlayer().getScore() % 10 == 0) {
+                            if (growWidth >= 0.9 && growHeight >= 0.9) {
+                                growing = false;
+                            }
                         makePattern(gjPattern);
-                    }
-                    else {
-                        if (growWidth>=0.9 && growHeight>=0.9){
-                            growing=false;
+                    } else {
+                        if (growWidth >= 0.9 && growHeight >= 0.9) {
+                                    growing = false;
                         }
-
                     }
                 }
-            }, (float) 1.25);
+            }, (float)0.1*(float)MyGdxGame.getPlayer().getBounceSpeed());
         }
         if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore()%10 != 0){
             for (int i = 0; i < rand.length; i++) {
@@ -559,18 +556,16 @@ public class Grid {
     }
 
     public void blockTransition(){
-        System.out.println(growWidth);
-        if (growWidth<0 && growHeight<0) {
-            growing=true;
-        }
-        if (growing && growWidth<=0.9 && growHeight<=0.9){
-            growWidth+=0.1;
-            growHeight+=0.1;
-        }
-        else if (!growing){
-            growWidth-=0.1;
-            growHeight-=0.1;
-        }
+            if (growWidth < 0 && growHeight < 0) {
+                growing = true;
+            }
+            if (growing && growWidth <= 0.9 && growHeight <= 0.9) {
+                growWidth += 0.1;
+                growHeight += 0.1;
+            } else if (!growing) {
+                growWidth -= 0.1;
+                growHeight -= 0.1;
+            }
     }
 
     public int getWidth(){
