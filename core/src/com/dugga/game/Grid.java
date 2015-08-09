@@ -34,8 +34,6 @@ public class Grid {
     private ArrayList<Integer> gjPattern;
     private ArrayList<Integer> smilePattern;
     private ArrayList<Integer> tenPattern;
-    private TextureAtlas atlas;
-    private BitmapFont font;
     private Texture square;
     private Texture squareW;
     private double growWidth;
@@ -44,7 +42,7 @@ public class Grid {
     private TextureAtlas.AtlasRegion region;
     private Sprite bounceSquare;
     private int emptyBox;
-    private boolean refresh;
+    private int bounceCount;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
@@ -56,12 +54,11 @@ public class Grid {
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
         smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
         tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
-        atlas=new TextureAtlas();
-        font = new BitmapFont(Gdx.files.internal("fontB36.fnt"), atlas.findRegion("fontB36.png"), false);
         square=new Texture("square.png");
         squareW=new Texture("squareW.png");
         growWidth=0;
         growHeight=0;
+        bounceCount=0;
         //initialize rand and bounceBlock
         for(int i=0; i<rand.length;i++){
             rand[i]=2;
@@ -358,7 +355,7 @@ public class Grid {
 
                     emptyBox=boxCount;
                     batch.draw(squareW, hitX, hitY, width, height);
-                    font.draw(batch, ""+MyGdxGame.getPlayer().getScore(), hitX+width/2, hitY+height/2);
+                    MyGdxGame.getFont().draw(batch, ""+MyGdxGame.getPlayer().getScore(), hitX+width/2, hitY+height/2);
                     break;
                 case 30:
                     hitY=row1b-width/2;
@@ -503,11 +500,11 @@ public class Grid {
                     MyGdxGame.getPlayer().setDead(true);
                 }
                 else if (bounceBlock[boxCount]){
-                    if (MyGdxGame.getPlayer().getScore()%10==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=10){
+                    if (MyGdxGame.getPlayer().getScore()%5==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=20){
                         blockRarity+=1;
                     }
-                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0 && MyGdxGame.getPlayer().getBounceSpeed()!=5){
-                        MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.05);
+                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0 && MyGdxGame.getPlayer().getBounceSpeed()<=5){
+                        MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.1);
                     }
                 }
             }
@@ -517,7 +514,7 @@ public class Grid {
         }
     }
 
-    //allows me to make a pattern of blocks simply by inputting their numbers into this function through and arraylist
+    //allows me to make a pattern of blocks simply by inputting their numbers into this function through an arraylist
     public void makePattern(ArrayList<Integer> arrayList){
         for (int x=0;x<rand.length;x++){
             rand[x]=2;
@@ -528,37 +525,45 @@ public class Grid {
     }
 
     public void updateGround(){
+        final int patternChange=generator.nextInt(3);
         if (MyGdxGame.getPlayer().getHitGround()) {
-            final int patternChange=generator.nextInt(3);
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    if (MyGdxGame.getPlayer().getScore() % 10 == 0) {
+                        //makes ball shrink at max width and height
                         if (growWidth >= 0.9 && growHeight >= 0.9) {
                             growing = false;
                         }
-                        switch(patternChange){
-                            case 0:
-                                makePattern(gjPattern);
-                                break;
-                            case 1:
-                                makePattern(smilePattern);
-                                break;
-                            case 2:
-                                makePattern(tenPattern);
-                                break;
-                        }
-                    } else {
-                        if (growWidth >= 0.9 && growHeight >= 0.9) {
-                            growing = false;
-                        }
-                    }
                 }
+                //delays block refresh based on bounce speed
             }, (float)0.1*(float)MyGdxGame.getPlayer().getBounceSpeed());
         }
         if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore()%10 != 0){
             for (int i = 0; i < rand.length; i++) {
                 rand[i] = generator.nextInt(blockRarity);
+            }
+            //checks if no blocks appear, will add a random block if so
+            if (!checkForBlocks()){
+                rand[generator.nextInt(45)] = 0;
+            }
+        }
+
+        //makes pattern appear every ten points
+        if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore() % 10 == 0 && MyGdxGame.getPlayer().getScore()!=0) {
+            if (growWidth >= 0.9 && growHeight >= 0.9) {
+                growing = false;
+            }
+            switch(patternChange){
+                //randomizes pattern
+                case 0:
+                    makePattern(gjPattern);
+                    break;
+                case 1:
+                    makePattern(smilePattern);
+                    break;
+                case 2:
+                    makePattern(tenPattern);
+                    break;
             }
         }
     }
@@ -574,6 +579,66 @@ public class Grid {
                 growWidth -= 0.1;
                 growHeight -= 0.1;
             }
+    }
+
+    public boolean checkForBlocks(){
+        for (int i=0; i<bounceBlock.length; i++){
+            if (bounceBlock[i]){
+                bounceCount++;
+            }
+        }
+        if (bounceCount==0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public void reset(int locX, int locY, int width){
+        this.width=width;
+        height=width;
+        generator = new Random();
+        rand=new int[45];
+        bounceBlock=new boolean [45];
+        blockRarity=2;
+        gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
+        smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
+        tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
+        square=new Texture("square.png");
+        squareW=new Texture("squareW.png");
+        growWidth=0;
+        growHeight=0;
+        bounceCount=0;
+        //initialize rand and bounceBlock
+        for(int i=0; i<rand.length;i++){
+            rand[i]=2;
+            rand[25]=0;
+            rand[26]=0;
+            rand[27]=0;
+            rand[30]=0;
+            rand[0]=0;
+            rand[5]=0;
+            rand[6]=0;
+            rand[7]=0;
+            rand[2]=0;
+            rand[15]=0;
+            rand[16]=0;
+            rand[17]=0;
+            rand[20]=0;
+            rand[22]=0;
+            rand[35]=0;
+            rand[37]=0;
+            rand[4]=0;
+            rand[9]=0;
+            rand[14]=0;
+            rand[19]=0;
+            rand[39]=0;
+            rand[40]=0;
+            rand[41]=0;
+            rand[42]=0;
+            bounceBlock[i]=false;
+        }
     }
 
     public int getWidth(){
