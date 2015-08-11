@@ -25,8 +25,8 @@ public class Button {
     private double growWidth;
     private double growHeight;private Sprite buttonSprite;
     public Button(Type buttonType, int locX, int locY){
-        width = Gdx.graphics.getWidth()/2;
-        height=Gdx.graphics.getHeight()/2/4;
+        width = 540;
+        height=240;
         loc=new Vector2(locX-width/2, locY-height/2);
         buttonImg=new Texture("squareW.png");
         switch (buttonType){

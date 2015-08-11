@@ -22,16 +22,16 @@ public class DeathMenu {
     private Sprite menuSprite;
     public DeathMenu(){
         menuImg=new Texture("menu.png");
-        width = Gdx.graphics.getWidth()/2+Gdx.graphics.getWidth()/4;
-        height=Gdx.graphics.getHeight()/2;
+        width = 810;
+        height=960;
         loc=new Vector2(Gdx.graphics.getWidth()/2-width/2, Gdx.graphics.getHeight()/2-height/2);
         restartButton=new Button(Button.Type.RESTART, (int)loc.x+width/2, (int)loc.y+height/2);
         quitButton=new Button(Button.Type.QUIT, (int)loc.x+width/2, (int)loc.y+height/2-Gdx.graphics.getHeight()/7);
         growWidth=0;
         growHeight=0;
         menuSprite=new Sprite(menuImg, width, height);
-        menuSprite.setRegionWidth(width / 4 - width / 250);
-        menuSprite.setRegionHeight(height / 4 - height/40);
+        //menuSprite.setRegionWidth(width / 4 - width / 250);
+        //menuSprite.setRegionHeight(height / 4 - height/40);
         menuSprite.setOriginCenter();
         menuSprite.setPosition(loc.x, loc.y);
     }
