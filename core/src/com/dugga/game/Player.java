@@ -30,10 +30,11 @@ public class Player {
     private int score;
     private double bounceSpeed;
     private double moveSpeed;
+    private boolean scoring;
+    private double relativeSpeed;
 
 
     public Player(int locX, int locY){
-        img=new Texture("circle.png");
         maxWidth=300;
         maxHeight=300;
         minWidth=100;
@@ -49,6 +50,9 @@ public class Player {
         bounceSpeed=2;
         moveSpeed=bounceSpeed*0.5;
         dead=false;
+        img=new Texture("circle.png");
+        scoring=false;
+        relativeSpeed=0.5;
     }
 
     public void draw(SpriteBatch batch){
@@ -175,12 +179,19 @@ public class Player {
         }
         //when ball at smallest point, start growing
         else if (width<=minWidth && height<=minHeight){
+            scoring=true;
             if (dead){
                 growing=false;
             }
             else if (!dead){
                 growing=true;
+            }
+        }
+
+        if (width>minWidth && height>minHeight){
+            if (scoring) {
                 score++;
+                scoring=false;
             }
         }
 
@@ -192,9 +203,9 @@ public class Player {
             }
         }
         //when ball is going up
-        else{
-            width+=bounceSpeed;
-            height+=bounceSpeed;
+        else if (growing){
+            width+=bounceSpeed*0.9;
+            height+=bounceSpeed*0.9;
         }
     }
 
@@ -214,23 +225,15 @@ public class Player {
         }
     }
 
-    public void reset(int locX, int locY){
-        img=new Texture("circle.png");
-        maxWidth=300;
-        maxHeight=300;
-        minWidth=100;
-        minHeight=100;
-        width=maxWidth;
-        height=maxHeight;
-        locPlayer=new Vector2(locX-(float)width/2, locY-(float)height/2);
-        velPlayer=new Vector2(1, 1);
-        growing=false;
-        score=0;
-        startAccelX=0;
-        startAccelY=0;
-        bounceSpeed=2;
-        moveSpeed=bounceSpeed*0.5;
-        dead=false;
+    public Vector2[] checkPlayerLoc(){
+        Vector2[] loc=new Vector2[(int)(width*height)];
+        for (int i=(int)locPlayer.x-(int)width/2; i<width; i++){
+
+        }
+        for (int i=(int)locPlayer.y-(int)height/2; i<height; i++){
+
+        }
+        return loc;
     }
 
     public boolean getHitGround(){
@@ -271,5 +274,13 @@ public class Player {
 
     public double getHeight(){
         return height;
+    }
+
+    public double getRelativeSpeed(){
+        return relativeSpeed;
+    }
+
+    public void setRelativeSpeed(double relativeSpeed){
+        this.relativeSpeed=relativeSpeed;
     }
 }

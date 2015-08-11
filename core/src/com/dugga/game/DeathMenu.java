@@ -2,7 +2,9 @@ package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -13,17 +15,39 @@ public class DeathMenu {
     private int width;
     private int height;
     private Vector2 loc;
-    private Button resumeButton;
+    private Button restartButton;
+    private Button quitButton;
+    private double growWidth;
+    private double growHeight;
+    private Sprite menuSprite;
     public DeathMenu(){
         menuImg=new Texture("menu.png");
-        width = Gdx.graphics.getWidth();
+        width = Gdx.graphics.getWidth()/2+Gdx.graphics.getWidth()/4;
         height=Gdx.graphics.getHeight()/2;
         loc=new Vector2(Gdx.graphics.getWidth()/2-width/2, Gdx.graphics.getHeight()/2-height/2);
-        resumeButton=new Button(Button.type.RESTART, (int)loc.x+width/2, (int)loc.y+height/2);
+        restartButton=new Button(Button.Type.RESTART, (int)loc.x+width/2, (int)loc.y+height/2);
+        quitButton=new Button(Button.Type.QUIT, (int)loc.x+width/2, (int)loc.y+height/2-Gdx.graphics.getHeight()/7);
+        growWidth=0;
+        growHeight=0;
+        menuSprite=new Sprite(menuImg, width, height);
+        menuSprite.setRegionWidth(width / 4 - width / 250);
+        menuSprite.setRegionHeight(height / 4 - height/40);
+        menuSprite.setOriginCenter();
+        menuSprite.setPosition(loc.x, loc.y);
     }
+
     public void draw(SpriteBatch batch){
-        batch.draw(menuImg, loc.x, loc.y, width, height);
-        resumeButton.draw(batch);
+        menuSprite.setScale((float)growWidth, (float)growHeight);
+        menuSprite.draw(batch);
+        if (growWidth<1){
+            growWidth+=0.05;
+        }
+        if (growHeight<1){
+            growHeight+=0.05;
+        }
+        restartButton.draw(batch);
+        quitButton.draw(batch);
+        MyGdxGame.drawScore((int)(loc.x+width/2), (int)(loc.y+height/2+Gdx.graphics.getHeight()/7), MyGdxGame.ScoreType.END);
     }
 
     public int getWidth(){

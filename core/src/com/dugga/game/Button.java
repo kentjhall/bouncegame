@@ -3,7 +3,9 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,40 +13,58 @@ import com.badlogic.gdx.math.Vector2;
  * Created by kenthall on 8/8/15.
  */
 public class Button {
-    public enum type{
+    public enum Type{
         RESTART, QUIT
     }
     private Texture buttonImg;
     private int width;
     private int height;
     private Vector2 loc;
-    private String buttonText;
-    private type buttonType;
+    private Type buttonType;
     private Rectangle hitBox;
-    public Button(type buttonType, int locX, int locY){
+    private double growWidth;
+    private double growHeight;private Sprite buttonSprite;
+    public Button(Type buttonType, int locX, int locY){
         width = Gdx.graphics.getWidth()/2;
         height=Gdx.graphics.getHeight()/2/4;
         loc=new Vector2(locX-width/2, locY-height/2);
         buttonImg=new Texture("squareW.png");
+        switch (buttonType){
+            case RESTART:
+                buttonImg=new Texture("retryButton.png");
+                break;
+            case QUIT:
+                buttonImg=new Texture("quitButton.png");
+                break;
+        }
         hitBox=new Rectangle(loc.x, loc.y, width, height);
         this.buttonType=buttonType;
-        buttonText="null";
+        growWidth=0;
+        growHeight=0;
+        buttonSprite=new Sprite(buttonImg, width, height);
+        buttonSprite.setOriginCenter();
+        buttonSprite.setPosition(loc.x, loc.y);
     }
 
     public void draw(SpriteBatch batch){
-        batch.draw(buttonImg, loc.x, loc.y, width, height);
-        MyGdxGame.getFont().draw(batch, buttonText, loc.x+width/2, loc.y+height/2);
-
+        buttonSprite.setScale((float) growWidth, (float) growHeight);
+        buttonSprite.draw(batch);
+        if (growWidth<1) {
+            growWidth += 0.05;
+        }
+        if (growHeight<1){
+            growHeight+=0.05;
+        }
         switch (buttonType){
             case RESTART:
-                buttonText="Restart";
                 if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.isTouched()){
-                    System.out.println(Gdx.input.getX());
                     MyGdxGame.reset();
                 }
                 break;
             case QUIT:
-                buttonText="Quit";
+                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.isTouched()){
+                    System.out.println("quit");
+                }
                 break;
         }
     }

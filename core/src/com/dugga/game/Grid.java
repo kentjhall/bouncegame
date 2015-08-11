@@ -3,6 +3,7 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -355,7 +356,7 @@ public class Grid {
 
                     emptyBox=boxCount;
                     batch.draw(squareW, hitX, hitY, width, height);
-                    MyGdxGame.getFont().draw(batch, ""+MyGdxGame.getPlayer().getScore(), hitX+width/2, hitY+height/2);
+                    MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE);
                     break;
                 case 30:
                     hitY=row1b-width/2;
@@ -489,6 +490,7 @@ public class Grid {
                 bounceSquare.setOriginCenter();
                 bounceSquare.setPosition(hitX, hitY);
                 bounceSquare.setScale((float) growWidth, (float) growHeight);
+                bounceSquare.setTexture(square);
                 bounceSquare.draw(batch);
                 bounceBlock[boxCount]=true;
             }
@@ -500,11 +502,16 @@ public class Grid {
                     MyGdxGame.getPlayer().setDead(true);
                 }
                 else if (bounceBlock[boxCount]){
-                    if (MyGdxGame.getPlayer().getScore()%5==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=20){
+                    if (MyGdxGame.getPlayer().getScore()%7==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=20){
                         blockRarity+=1;
                     }
-                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0 && MyGdxGame.getPlayer().getBounceSpeed()<=5){
-                        MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.1);
+                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0){
+                        if (MyGdxGame.getPlayer().getBounceSpeed()<=5) {
+                            MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.07);
+                        }
+                        if (MyGdxGame.getPlayer().getRelativeSpeed()>=0.4) {
+                            MyGdxGame.getPlayer().setRelativeSpeed(MyGdxGame.getPlayer().getRelativeSpeed() - 0.002);
+                        }
                     }
                 }
             }
@@ -544,6 +551,7 @@ public class Grid {
             }
             //checks if no blocks appear, will add a random block if so
             if (!checkForBlocks()){
+                rand[generator.nextInt(45)] = 0;
                 rand[generator.nextInt(45)] = 0;
             }
         }
@@ -592,52 +600,6 @@ public class Grid {
         }
         else{
             return true;
-        }
-    }
-
-    public void reset(int locX, int locY, int width){
-        this.width=width;
-        height=width;
-        generator = new Random();
-        rand=new int[45];
-        bounceBlock=new boolean [45];
-        blockRarity=2;
-        gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
-        smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
-        tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
-        square=new Texture("square.png");
-        squareW=new Texture("squareW.png");
-        growWidth=0;
-        growHeight=0;
-        bounceCount=0;
-        //initialize rand and bounceBlock
-        for(int i=0; i<rand.length;i++){
-            rand[i]=2;
-            rand[25]=0;
-            rand[26]=0;
-            rand[27]=0;
-            rand[30]=0;
-            rand[0]=0;
-            rand[5]=0;
-            rand[6]=0;
-            rand[7]=0;
-            rand[2]=0;
-            rand[15]=0;
-            rand[16]=0;
-            rand[17]=0;
-            rand[20]=0;
-            rand[22]=0;
-            rand[35]=0;
-            rand[37]=0;
-            rand[4]=0;
-            rand[9]=0;
-            rand[14]=0;
-            rand[19]=0;
-            rand[39]=0;
-            rand[40]=0;
-            rand[41]=0;
-            rand[42]=0;
-            bounceBlock[i]=false;
         }
     }
 
