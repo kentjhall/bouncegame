@@ -30,8 +30,6 @@ public class DeathMenu {
         growWidth=0;
         growHeight=0;
         menuSprite=new Sprite(menuImg, width, height);
-        //menuSprite.setRegionWidth(width / 4 - width / 250);
-        //menuSprite.setRegionHeight(height / 4 - height/40);
         menuSprite.setOriginCenter();
         menuSprite.setPosition(loc.x, loc.y);
     }
@@ -47,7 +45,7 @@ public class DeathMenu {
         }
         restartButton.draw(batch);
         quitButton.draw(batch);
-        MyGdxGame.drawScore((int)(loc.x+width/2), (int)(loc.y+height/2+Gdx.graphics.getHeight()/7), MyGdxGame.ScoreType.END);
+        MyGdxGame.drawScore(restartButton.getLocX(), (float)(restartButton.getLocY() + Gdx.graphics.getHeight()/4.5), MyGdxGame.ScoreType.END);
     }
 
     public int getWidth(){

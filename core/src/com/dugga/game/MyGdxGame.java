@@ -52,9 +52,10 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
 
         endParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        endParameter.size=108;
+        endParameter.size=144;
         endParameter.color= Color.WHITE;
         endFont = generator.generateFont(endParameter);
+        endFont.getData().setScale((float)endFontScale, (float)endFontScale);
         generator.dispose();
 	}
 
@@ -81,15 +82,21 @@ public class MyGdxGame extends ApplicationAdapter{
             if (scoreFontScale>0.1) {
                 scoreFontScale-=0.1;
             }
-
-            endFontLayout.setText(endFont, ""+player.getScore());
-            endFont.getData().setScale((float) endFontScale, (float) endFontScale);
-            if (scoreFontScale<1) {
-                scoreFontScale+=0.1;
-            }
         }
         if (player.getWidth()<=0 && player.getHeight()<=0){
             deathMenu.draw(batch);
+            endFontLayout.setText(endFont, ""+player.getScore());
+            endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+            if (endFontScale<1) {
+                endFontScale+=0.05;
+            }
+        }
+        else{
+            endFontLayout.setText(endFont, ""+player.getScore());
+            endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+            if (endFontScale>0.1) {
+                endFontScale-=0.05;
+            }
         }
         batch.end();
 	}
@@ -100,13 +107,13 @@ public class MyGdxGame extends ApplicationAdapter{
         deathMenu=new DeathMenu();
     }
 
-    public static void drawScore(int x, int y, ScoreType scoreType){
+    public static void drawScore(float x, float y, ScoreType scoreType){
         switch (scoreType){
             case SCORE:
                 scoreFont.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 4);
                 break;
             case END:
-                endFont.draw(batch, ""+player.getScore(), x, y);
+                endFont.draw(batch, ""+player.getScore(), x - endFontLayout.width/2, y - endFontLayout.height/2);
                 break;
         }
     }

@@ -19,14 +19,19 @@ public class Button {
     private Texture buttonImg;
     private int width;
     private int height;
+    private int locX;
+    private int locY;
     private Vector2 loc;
     private Type buttonType;
     private Rectangle hitBox;
     private double growWidth;
-    private double growHeight;private Sprite buttonSprite;
+    private double growHeight;
+    private Sprite buttonSprite;
     public Button(Type buttonType, int locX, int locY){
         width = 540;
         height=240;
+        this.locX=locX;
+        this.locY=locY;
         loc=new Vector2(locX-width/2, locY-height/2);
         buttonImg=new Texture("squareW.png");
         switch (buttonType){
@@ -67,5 +72,13 @@ public class Button {
                 }
                 break;
         }
+    }
+
+    public int getLocX(){
+        return locX;
+    }
+
+    public int getLocY(){
+        return locY;
     }
 }

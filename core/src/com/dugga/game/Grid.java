@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -114,7 +115,7 @@ public class Grid {
         int column3=centerX;
         int column4=centerX+width;
         int column5=centerX+2*width;
-        
+
         hitBox=new Rectangle[45];
         for (boxCount=0; boxCount<hitBox.length; boxCount++) {
             switch (boxCount){
@@ -497,23 +498,24 @@ public class Grid {
 
             hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
-            if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer().x, MyGdxGame.getPlayer().getLocPlayer().y) && MyGdxGame.getPlayer().getHitGround()){
-                if (!bounceBlock[boxCount]) {
-                    MyGdxGame.getPlayer().setDead(true);
-                }
-                else if (bounceBlock[boxCount]){
-                    if (MyGdxGame.getPlayer().getScore()%7==0 && MyGdxGame.getPlayer().getScore()!=0 && blockRarity!=20){
-                        blockRarity+=1;
-                    }
-                    if (MyGdxGame.getPlayer().getScore()%1==0 && MyGdxGame.getPlayer().getScore()!=0){
-                        if (MyGdxGame.getPlayer().getBounceSpeed()<=5) {
-                            MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.07);
+            if (MyGdxGame.getPlayer().getHitGround()) {
+                Vector2 locPlayer=MyGdxGame.getPlayer().getLocPlayer();
+                double widthPlayer=MyGdxGame.getPlayer().getWidth();
+                double heightPlayer=MyGdxGame.getPlayer().getHeight();
+                    if (hitBox[boxCount].contains(locPlayer) || hitBox[boxCount].contains(locPlayer.x+(float)widthPlayer/2, locPlayer.y) || hitBox[boxCount].contains(locPlayer.x-(float)widthPlayer/2, locPlayer.y) || hitBox[boxCount].contains(locPlayer.x, locPlayer.y+(float)heightPlayer/2) || hitBox[boxCount].contains(locPlayer.x, locPlayer.y-(float)heightPlayer/2)) {
+                        if (!bounceBlock[boxCount]) {
+                            MyGdxGame.getPlayer().setDead(true);
+                        } else if (bounceBlock[boxCount]) {
+                            if (MyGdxGame.getPlayer().getScore() % 5 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
+                                blockRarity += 1;
+                            }
+                            if (MyGdxGame.getPlayer().getScore() % 1 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
+                                if (MyGdxGame.getPlayer().getBounceSpeed() <= 7) {
+                                    MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.07);
+                                }
+                            }
                         }
-                        if (MyGdxGame.getPlayer().getRelativeSpeed()>=0.4) {
-                            MyGdxGame.getPlayer().setRelativeSpeed(MyGdxGame.getPlayer().getRelativeSpeed() - 0.002);
-                        }
                     }
-                }
             }
             if (bounceBlock[boxCount]) {
                 bounceBlock[boxCount] = false;
@@ -543,7 +545,7 @@ public class Grid {
                         }
                 }
                 //delays block refresh based on bounce speed
-            }, (float)0.1*(float)MyGdxGame.getPlayer().getBounceSpeed());
+            }, 0);
         }
         if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore()%10 != 0){
             for (int i = 0; i < rand.length; i++) {
@@ -551,7 +553,6 @@ public class Grid {
             }
             //checks if no blocks appear, will add a random block if so
             if (!checkForBlocks()){
-                rand[generator.nextInt(45)] = 0;
                 rand[generator.nextInt(45)] = 0;
             }
         }

@@ -1,9 +1,15 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import java.awt.Shape;
 
 import sun.rmi.runtime.Log;
 
@@ -12,6 +18,7 @@ import sun.rmi.runtime.Log;
  */
 public class Player {
     private Texture img;
+    private Rectangle hitBox;
     private float startAccelX;
     private float startAccelY;
     private float accelX;
@@ -31,7 +38,8 @@ public class Player {
     private double bounceSpeed;
     private double moveSpeed;
     private boolean scoring;
-    private double relativeSpeed;
+    private ShapeRenderer shapeRenderer;
+    private Vector2[] points;
 
 
     public Player(int locX, int locY){
@@ -52,11 +60,29 @@ public class Player {
         dead=false;
         img=new Texture("circle.png");
         scoring=false;
-        relativeSpeed=0.5;
+        shapeRenderer=new ShapeRenderer();
+        hitBox=new Rectangle(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
+        points=new Vector2[5];
+
+        points[0]=new Vector2(locPlayer.x, locPlayer.y);
+        points[1]=new Vector2(locPlayer.x+(float)width/2, locPlayer.y);
+        points[2]=new Vector2(locPlayer.x-(float)width/2, locPlayer.y);
+        points[3]=new Vector2(locPlayer.x, locPlayer.y+(float)height/2);
+        points[4]=new Vector2(locPlayer.x, locPlayer.y-(float)height/2);
     }
 
     public void draw(SpriteBatch batch){
-        batch.draw(img, locPlayer.x-(float)width/2, locPlayer.y-(float)height/2, (float)width, (float)height);
+        batch.draw(img, locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
+        hitBox.set(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.x(locPlayer, 20);
+        shapeRenderer.x(locPlayer.x+(float)width/2, locPlayer.y, 20);
+        shapeRenderer.x(locPlayer.x-(float)width/2, locPlayer.y, 20);
+        shapeRenderer.x(locPlayer.x, locPlayer.y+(float)height/2, 20);
+        shapeRenderer.x(locPlayer.x, locPlayer.y-(float)height/2, 20);
+
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.end();
         tilt();
         bounce();
         wrap();
@@ -227,13 +253,31 @@ public class Player {
 
     public Vector2[] checkPlayerLoc(){
         Vector2[] loc=new Vector2[(int)(width*height)];
-        for (int i=(int)locPlayer.x-(int)width/2; i<width; i++){
 
+        int lx=0;
+        int ly=0;
+
+        //initialize loc
+        for (int k=0; k<loc.length; k++){
+            loc[k]=new Vector2(0, 0);
         }
-        for (int i=(int)locPlayer.y-(int)height/2; i<height; i++){
 
+        //checks every x value of player and adds to loc array
+        for (int i = (int) locPlayer.x - (int) width / 2; i < width; i++) {
+            loc[lx].x = i;
+            lx++;
+        }
+
+        //checks every y value of player and adds to loc array
+        for (int i = (int) locPlayer.y - (int) height / 2; i < height; i++) {
+            loc[ly].y=i;
+            ly++;
         }
         return loc;
+    }
+
+    public Vector2[] getPoints(){
+        return points;
     }
 
     public boolean getHitGround(){
@@ -276,11 +320,7 @@ public class Player {
         return height;
     }
 
-    public double getRelativeSpeed(){
-        return relativeSpeed;
-    }
-
-    public void setRelativeSpeed(double relativeSpeed){
-        this.relativeSpeed=relativeSpeed;
+    public Rectangle getHitBox(){
+        return hitBox;
     }
 }
