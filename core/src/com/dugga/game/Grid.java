@@ -2,17 +2,11 @@ package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
@@ -499,10 +493,7 @@ public class Grid {
             hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
             if (MyGdxGame.getPlayer().getHitGround()) {
-                Vector2 locPlayer=MyGdxGame.getPlayer().getLocPlayer();
-                double widthPlayer=MyGdxGame.getPlayer().getWidth();
-                double heightPlayer=MyGdxGame.getPlayer().getHeight();
-                    if (hitBox[boxCount].contains(locPlayer) || hitBox[boxCount].contains(locPlayer.x+(float)widthPlayer/2, locPlayer.y) || hitBox[boxCount].contains(locPlayer.x-(float)widthPlayer/2, locPlayer.y) || hitBox[boxCount].contains(locPlayer.x, locPlayer.y+(float)heightPlayer/2) || hitBox[boxCount].contains(locPlayer.x, locPlayer.y-(float)heightPlayer/2)) {
+                    if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer())) {
                         if (!bounceBlock[boxCount]) {
                             MyGdxGame.getPlayer().setDead(true);
                         } else if (bounceBlock[boxCount]) {

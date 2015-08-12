@@ -3,7 +3,9 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,7 +20,7 @@ import sun.rmi.runtime.Log;
  */
 public class Player {
     private Texture img;
-    private Rectangle hitBox;
+    private Circle hitBox;
     private float startAccelX;
     private float startAccelY;
     private float accelX;
@@ -39,8 +41,8 @@ public class Player {
     private double moveSpeed;
     private boolean scoring;
     private ShapeRenderer shapeRenderer;
-    private Vector2[] points;
-
+    private Sprite player;
+    private TextureAtlas.AtlasRegion region;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -61,28 +63,23 @@ public class Player {
         img=new Texture("circle.png");
         scoring=false;
         shapeRenderer=new ShapeRenderer();
-        hitBox=new Rectangle(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
-        points=new Vector2[5];
-
-        points[0]=new Vector2(locPlayer.x, locPlayer.y);
-        points[1]=new Vector2(locPlayer.x+(float)width/2, locPlayer.y);
-        points[2]=new Vector2(locPlayer.x-(float)width/2, locPlayer.y);
-        points[3]=new Vector2(locPlayer.x, locPlayer.y+(float)height/2);
-        points[4]=new Vector2(locPlayer.x, locPlayer.y-(float)height/2);
+        hitBox=new Circle(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float)width/2);
+        region=new TextureAtlas.AtlasRegion(img, (int)(locPlayer.x), (int)(locPlayer.y), (int)width, (int)height);
+        player=new Sprite(region);
     }
 
     public void draw(SpriteBatch batch){
-        batch.draw(img, locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
-        hitBox.set(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.x(locPlayer, 20);
-        shapeRenderer.x(locPlayer.x+(float)width/2, locPlayer.y, 20);
-        shapeRenderer.x(locPlayer.x-(float)width/2, locPlayer.y, 20);
-        shapeRenderer.x(locPlayer.x, locPlayer.y+(float)height/2, 20);
-        shapeRenderer.x(locPlayer.x, locPlayer.y-(float)height/2, 20);
-
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.end();
+        player.setPosition(locPlayer.x, locPlayer.y);
+        player.setScale((float) width, (float) height);
+        player.setTexture(img);
+        player.setOriginCenter();
+        player.draw(batch);
+        //batch.draw(img, locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
+        //hitBox.set(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width/2);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.end();
         tilt();
         bounce();
         wrap();
@@ -251,35 +248,6 @@ public class Player {
         }
     }
 
-    public Vector2[] checkPlayerLoc(){
-        Vector2[] loc=new Vector2[(int)(width*height)];
-
-        int lx=0;
-        int ly=0;
-
-        //initialize loc
-        for (int k=0; k<loc.length; k++){
-            loc[k]=new Vector2(0, 0);
-        }
-
-        //checks every x value of player and adds to loc array
-        for (int i = (int) locPlayer.x - (int) width / 2; i < width; i++) {
-            loc[lx].x = i;
-            lx++;
-        }
-
-        //checks every y value of player and adds to loc array
-        for (int i = (int) locPlayer.y - (int) height / 2; i < height; i++) {
-            loc[ly].y=i;
-            ly++;
-        }
-        return loc;
-    }
-
-    public Vector2[] getPoints(){
-        return points;
-    }
-
     public boolean getHitGround(){
         return hitGround;
     }
@@ -320,7 +288,7 @@ public class Player {
         return height;
     }
 
-    public Rectangle getHitBox(){
+    public Circle getHitBox(){
         return hitBox;
     }
 }
