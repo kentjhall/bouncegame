@@ -28,6 +28,7 @@ public class Button {
     private Sprite buttonSprite;
     private InputProcessor inputProcessor;
     private boolean buttonDown;
+    private boolean goButton;
     public Button(Type buttonType, int locX, int locY){
         width = 540;
         height=240;
@@ -51,6 +52,7 @@ public class Button {
         Gdx.input.setInputProcessor(inputProcessor);
         buttonDown=false;
         doneGrowing=false;
+        goButton=false;
     }
 
     public void draw(SpriteBatch batch){
@@ -71,7 +73,8 @@ public class Button {
         }
         switch (buttonType){
             case RESTART:
-                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && inputProcessor.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
+                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && inputProcessor.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0) && Gdx.input.isTouched()){
+                    goButton=true;
                     if (!buttonDown) {
                         growWidth -= 0.1;
                         growHeight -= 0.1;
@@ -84,7 +87,7 @@ public class Button {
                         growHeight += 0.1;
                         buttonDown=false;
                     }
-                    if (!buttonDown) {
+                    if (!buttonDown && goButton) {
                         MyGdxGame.setMainMenu(new MainMenu());
                         MyGdxGame.getMainMenu().setStart(false);
                     }
