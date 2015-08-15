@@ -501,8 +501,8 @@ public class Grid {
                                 blockRarity += 1;
                             }
                             if (MyGdxGame.getPlayer().getScore() % 1 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
-                                if (MyGdxGame.getPlayer().getBounceSpeed() <= 7) {
-                                    MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.07);
+                                if (MyGdxGame.getPlayer().getBounceSpeed() <= 10) {
+                                    MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
                                 }
                             }
                         }

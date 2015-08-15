@@ -24,7 +24,10 @@ public class Button {
     private Rectangle hitBox;
     private double growWidth;
     private double growHeight;
+    private boolean doneGrowing;
     private Sprite buttonSprite;
+    private InputProcessor inputProcessor;
+    private boolean buttonDown;
     public Button(Type buttonType, int locX, int locY){
         width = 540;
         height=240;
@@ -44,22 +47,47 @@ public class Button {
         buttonSprite=new Sprite(buttonImg, width, height);
         buttonSprite.setOriginCenter();
         buttonSprite.setPosition(loc.x, loc.y);
+        inputProcessor=new InputProcessor();
+        Gdx.input.setInputProcessor(inputProcessor);
+        buttonDown=false;
+        doneGrowing=false;
     }
 
     public void draw(SpriteBatch batch){
         buttonSprite.setScale((float) growWidth, (float) growHeight);
         buttonSprite.draw(batch);
-        if (growWidth<1) {
+        if (growWidth<1 && !doneGrowing) {
             growWidth += 0.05;
         }
-        if (growHeight<1){
+        else if(growWidth>=1){
+            doneGrowing=true;
+        }
+
+        if (growHeight<1 && !doneGrowing){
             growHeight+=0.05;
+        }
+        else if (growHeight>=1){
+            doneGrowing=true;
         }
         switch (buttonType){
             case RESTART:
-                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.isTouched()){
-                    MyGdxGame.setMainMenu(new MainMenu());
-                    MyGdxGame.getMainMenu().setStart(false);
+                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && inputProcessor.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
+                    if (!buttonDown) {
+                        growWidth -= 0.1;
+                        growHeight -= 0.1;
+                        buttonDown = true;
+                    }
+                }
+                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && inputProcessor.touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
+                    if (buttonDown) {
+                        growWidth += 0.1;
+                        growHeight += 0.1;
+                        buttonDown=false;
+                    }
+                    if (!buttonDown) {
+                        MyGdxGame.setMainMenu(new MainMenu());
+                        MyGdxGame.getMainMenu().setStart(false);
+                    }
                 }
                 break;
         }

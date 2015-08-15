@@ -94,18 +94,18 @@ public class Player {
             velPlayer.x=1*(float)moveSpeed;
         }
         else if ((int)accelX==(int)startAccelX-2 || (int)accelX==(int)startAccelX+2){
-            velPlayer.x=2*(float)moveSpeed;
-        }
-        else if ((int)accelX==(int)startAccelX-3 || (int)accelX==(int)startAccelX+3){
             velPlayer.x=3*(float)moveSpeed;
         }
-        else if ((int)accelX==(int)startAccelX-4 || (int)accelX==(int)startAccelX+4){
+        else if ((int)accelX==(int)startAccelX-3 || (int)accelX==(int)startAccelX+3){
             velPlayer.x=5*(float)moveSpeed;
         }
-        else if ((int)accelX==(int)startAccelX-5 || (int)accelX==(int)startAccelX+5){
-            velPlayer.x=8*(float)moveSpeed;
+        else if ((int)accelX==(int)startAccelX-4 || (int)accelX==(int)startAccelX+4){
+            velPlayer.x=7*(float)moveSpeed;
         }
-        else if ((int)accelX==(int)startAccelX-6 || (int)accelX==(int)startAccelX+6){
+        else if ((int)accelX==(int)startAccelX-5 || (int)accelX==(int)startAccelX+5){
+            velPlayer.x=10*(float)moveSpeed;
+        }
+        /*else if ((int)accelX==(int)startAccelX-6 || (int)accelX==(int)startAccelX+6){
             velPlayer.x=10*(float)moveSpeed;
         }
         else if ((int)accelX==(int)startAccelX-7 || (int)accelX==(int)startAccelX+7){
@@ -122,7 +122,7 @@ public class Player {
         }
         else{
             velPlayer.x=20*(float)moveSpeed;
-        }
+        }*/
 
         if ((int)accelY==(int)startAccelY){
             velPlayer.y=0*(float)moveSpeed;
@@ -131,18 +131,18 @@ public class Player {
             velPlayer.y=1*(float)moveSpeed;
         }
         else if ((int)accelY==(int)startAccelY-2 || (int)accelY==(int)startAccelY+2){
-            velPlayer.y=2*(float)moveSpeed;
-        }
-        else if ((int)accelY==(int)startAccelY-3 || (int)accelY==(int)startAccelY+3){
             velPlayer.y=3*(float)moveSpeed;
         }
-        else if ((int)accelY==(int)startAccelY-4 || (int)accelY==(int)startAccelY+4){
+        else if ((int)accelY==(int)startAccelY-3 || (int)accelY==(int)startAccelY+3){
             velPlayer.y=5*(float)moveSpeed;
         }
-        else if ((int)accelY==(int)startAccelY-5 || (int)accelY==(int)startAccelY+5){
-            velPlayer.y=8*(float)moveSpeed;
+        else if ((int)accelY==(int)startAccelY-4 || (int)accelY==(int)startAccelY+4){
+            velPlayer.y=7*(float)moveSpeed;
         }
-        else if ((int)accelY==(int)startAccelY-6 || (int)accelY==(int)startAccelY+6){
+        else if ((int)accelY==(int)startAccelY-5 || (int)accelY==(int)startAccelY+5){
+            velPlayer.y=10*(float)moveSpeed;
+        }
+        /*else if ((int)accelY==(int)startAccelY-6 || (int)accelY==(int)startAccelY+6){
             velPlayer.y=10*(float)moveSpeed;
         }
         else if ((int)accelY==(int)startAccelY-7 || (int)accelY==(int)startAccelY+7){
@@ -159,7 +159,7 @@ public class Player {
         }
         else{
             velPlayer.y=20*(float)moveSpeed;
-        }
+        }*/
 
 
         //when tilting right
