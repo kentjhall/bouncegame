@@ -27,12 +27,13 @@ public class MainMenu {
     private Texture phone;
     private Texture upArrow;
     private Texture downArrow;
+    private boolean arrowVisible;
     private Texture check;
-    private Pixmap arrowPix;
     private BitmapFont titleFont;
     private FreeTypeFontGenerator generator;
     private FreeTypeFontGenerator.FreeTypeFontParameter titleParameter;
     private GlyphLayout titleLayout;
+    private int count;
 
     public MainMenu(){
         start=false;
@@ -50,8 +51,8 @@ public class MainMenu {
         downArrow=new Texture("downArrow.png");
         check=new Texture("check.png");
         generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-        arrowPix=new Pixmap((int) (Gdx.graphics.getWidth() / 2 - (phoneWidth * 0.8) / 2), 200, Pixmap.Format.Alpha);
-        arrowPix.setColor(Color.CLEAR);
+        arrowVisible=true;
+        count=0;
 
         titleLayout=new GlyphLayout();
         titleParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -66,11 +67,12 @@ public class MainMenu {
         batch.draw(circleOutline, MyGdxGame.getPlayer().getLocPlayer().x-300/2, MyGdxGame.getPlayer().getLocPlayer().y-300/2, 300, 300);
         batch.draw(circle, MyGdxGame.getPlayer().getLocPlayer().x-(float)circleWidth/2, MyGdxGame.getPlayer().getLocPlayer().y-(float)circleHeight/2, (float) circleWidth, (float) circleHeight);
         batch.draw(phone, Gdx.graphics.getWidth()/2-phoneWidth/2, 100, phoneWidth, phoneHeight);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-            }
-        }, 0, (float) 0.25);
+        count++;
+        if (count>=25){
+            arrowVisible=!arrowVisible;
+            count=0;
+        }
+
 
         titleLayout.setText(titleFont, "NAME");
         titleFont.draw(batch, "NAME", Gdx.graphics.getWidth() / 2 - titleLayout.width / 2, Gdx.graphics.getHeight() - titleLayout.height / 2);
@@ -84,10 +86,10 @@ public class MainMenu {
             }
         }
         else{
-            if ((int)Gdx.input.getAccelerometerY()>1){
+            if ((int)Gdx.input.getAccelerometerY()>1 && arrowVisible){
                 batch.draw(upArrow, Gdx.graphics.getWidth() / 2 - (float) (phoneWidth * 0.8) / 2, 200, (float) (phoneWidth * 0.8), (float) (phoneWidth * 0.8));
             }
-            else if ((int)Gdx.input.getAccelerometerY()<-1){
+            else if ((int)Gdx.input.getAccelerometerY()<-1 && arrowVisible){
                 batch.draw(downArrow, Gdx.graphics.getWidth() / 2 - (float) (phoneWidth * 0.8) / 2, 200, (float) (phoneWidth * 0.8), (float) (phoneWidth * 0.8));
             }
 
