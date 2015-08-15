@@ -1,26 +1,18 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import java.awt.Shape;
-
-import sun.rmi.runtime.Log;
 
 /**
  * Created by student on 7/30/2015.
  */
 public class Player {
     private Texture img;
-    private Circle hitBox;
+    private Rectangle hitBox;
     private float startAccelX;
     private float startAccelY;
     private float accelX;
@@ -40,9 +32,8 @@ public class Player {
     private double bounceSpeed;
     private double moveSpeed;
     private boolean scoring;
-    private ShapeRenderer shapeRenderer;
     private Sprite player;
-    private TextureAtlas.AtlasRegion region;
+    private boolean deathChange;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -62,24 +53,20 @@ public class Player {
         dead=false;
         img=new Texture("circle.png");
         scoring=false;
-        shapeRenderer=new ShapeRenderer();
-        hitBox=new Circle(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float)width/2);
-        region=new TextureAtlas.AtlasRegion(img, (int)(locPlayer.x), (int)(locPlayer.y), (int)width, (int)height);
-        player=new Sprite(region);
+        hitBox=new Rectangle();
+        player=new Sprite(img);
+        deathChange=true;
     }
 
     public void draw(SpriteBatch batch){
-        player.setPosition(locPlayer.x, locPlayer.y);
-        player.setScale((float) width, (float) height);
+        player.setPosition(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2);
+        player.setSize((float) width, (float) height);
         player.setTexture(img);
-        player.setOriginCenter();
         player.draw(batch);
-        //batch.draw(img, locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width, (float) height);
-        //hitBox.set(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2, (float) width/2);
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//
-//        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.end();
+        if (!deathChange && width>maxWidth/2 && height>maxHeight/2){
+            deathChange=true;
+        }
+        hitBox.set(player.getBoundingRectangle());
         tilt();
         bounce();
         wrap();
@@ -204,6 +191,7 @@ public class Player {
         else if (width<=minWidth && height<=minHeight){
             scoring=true;
             if (dead){
+                deathChange=false;
                 growing=false;
             }
             else if (!dead){
@@ -260,6 +248,14 @@ public class Player {
         this.dead=dead;
     }
 
+    public void setDeathChange(boolean deathChange){
+        this.deathChange=deathChange;
+    }
+
+    public boolean getDeathChange(){
+        return deathChange;
+    }
+
     public boolean getDead(){
         return dead;
     }
@@ -288,7 +284,7 @@ public class Player {
         return height;
     }
 
-    public Circle getHitBox(){
+    public Rectangle getHitBox(){
         return hitBox;
     }
 }

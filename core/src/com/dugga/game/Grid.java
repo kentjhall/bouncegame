@@ -493,10 +493,10 @@ public class Grid {
             hitBox[boxCount]=new Rectangle(hitX, hitY, width, height);
 
             if (MyGdxGame.getPlayer().getHitGround()) {
-                    if (hitBox[boxCount].contains(MyGdxGame.getPlayer().getLocPlayer())) {
-                        if (!bounceBlock[boxCount]) {
-                            MyGdxGame.getPlayer().setDead(true);
-                        } else if (bounceBlock[boxCount]) {
+                    if (hitBox[boxCount].overlaps(MyGdxGame.getPlayer().getHitBox())) {
+                        if (bounceBlock[boxCount] && MyGdxGame.getPlayer().getDeathChange()) {
+                            MyGdxGame.getPlayer().setDead(false);
+                            MyGdxGame.getPlayer().setDeathChange(false);
                             if (MyGdxGame.getPlayer().getScore() % 5 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
                                 blockRarity += 1;
                             }
@@ -505,6 +505,9 @@ public class Grid {
                                     MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.07);
                                 }
                             }
+                        }
+                        else if (MyGdxGame.getPlayer().getDeathChange()){
+                            MyGdxGame.getPlayer().setDead(true);
                         }
                     }
             }
@@ -538,6 +541,7 @@ public class Grid {
                 //delays block refresh based on bounce speed
             }, 0);
         }
+        //updates blocks randomly, as long as pattern is not meant to appear
         if (growWidth<=0 && growHeight<=0 && MyGdxGame.getPlayer().getScore()%10 != 0){
             for (int i = 0; i < rand.length; i++) {
                 rand[i] = generator.nextInt(blockRarity);
@@ -595,12 +599,28 @@ public class Grid {
         }
     }
 
-    public int getWidth(){
-        return width;
+    public void setGrowWidth(double growWidth){
+        this.growWidth=growWidth;
     }
 
-    public int getHeight(){
-        return height;
+    public void setGrowHeight(double growHeight){
+        this.growHeight=growHeight;
+    }
+
+    public double getGrowWidth(){
+        return growWidth;
+    }
+
+    public double getGrowHeight(){
+        return growHeight;
+    }
+
+    public void setGrowing(boolean growing){
+        this.growing=growing;
+    }
+
+    public boolean getGrowing(){
+        return growing;
     }
 
     public int getBoxCount(){

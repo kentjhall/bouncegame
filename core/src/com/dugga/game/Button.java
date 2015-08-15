@@ -2,10 +2,8 @@ package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Button {
     public enum Type{
-        RESTART, QUIT
+        RESTART
     }
     private Texture buttonImg;
     private int width;
@@ -38,11 +36,8 @@ public class Button {
             case RESTART:
                 buttonImg=new Texture("retryButton.png");
                 break;
-            case QUIT:
-                buttonImg=new Texture("quitButton.png");
-                break;
         }
-        hitBox=new Rectangle(loc.x, loc.y, width, height);
+        hitBox=new Rectangle(loc.x, loc.y+height*2, width, height);
         this.buttonType=buttonType;
         growWidth=0;
         growHeight=0;
@@ -63,12 +58,8 @@ public class Button {
         switch (buttonType){
             case RESTART:
                 if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.isTouched()){
-                    MyGdxGame.reset();
-                }
-                break;
-            case QUIT:
-                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && Gdx.input.isTouched()){
-                    System.out.println("quit");
+                    MyGdxGame.setMainMenu(new MainMenu());
+                    MyGdxGame.getMainMenu().setStart(false);
                 }
                 break;
         }

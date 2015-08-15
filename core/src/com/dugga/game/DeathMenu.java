@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -16,7 +15,6 @@ public class DeathMenu {
     private int height;
     private Vector2 loc;
     private Button restartButton;
-    private Button quitButton;
     private double growWidth;
     private double growHeight;
     private Sprite menuSprite;
@@ -25,8 +23,7 @@ public class DeathMenu {
         width = 810;
         height=960;
         loc=new Vector2(Gdx.graphics.getWidth()/2-width/2, Gdx.graphics.getHeight()/2-height/2);
-        restartButton=new Button(Button.Type.RESTART, (int)loc.x+width/2, (int)loc.y+height/2);
-        quitButton=new Button(Button.Type.QUIT, (int)loc.x+width/2, (int)loc.y+height/2-Gdx.graphics.getHeight()/7);
+        restartButton=new Button(Button.Type.RESTART, (int)loc.x+width/2, (int)loc.y+height/2-Gdx.graphics.getHeight()/7);
         growWidth=0;
         growHeight=0;
         menuSprite=new Sprite(menuImg, width, height);
@@ -44,8 +41,7 @@ public class DeathMenu {
             growHeight+=0.05;
         }
         restartButton.draw(batch);
-        quitButton.draw(batch);
-        MyGdxGame.drawScore(restartButton.getLocX(), (float)(restartButton.getLocY() + Gdx.graphics.getHeight()/4.5), MyGdxGame.ScoreType.END);
+        MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + Gdx.graphics.getHeight() / 2.75), MyGdxGame.ScoreType.END);
     }
 
     public int getWidth(){

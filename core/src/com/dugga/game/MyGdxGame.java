@@ -6,15 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Matrix3;
-import com.badlogic.gdx.math.Matrix4;
 
 public class MyGdxGame extends ApplicationAdapter{
 	private static SpriteBatch batch;
+    private static MainMenu mainMenu;
     private static Player player;
     private static Grid grid;
     private static DeathMenu deathMenu;
@@ -22,12 +19,15 @@ public class MyGdxGame extends ApplicationAdapter{
     private static BitmapFont scoreFont;
     private static BitmapFont endFont;
     private static FreeTypeFontGenerator generator;
+    private static FreeTypeFontGenerator generator2;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter;
     private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter;
+    private static FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private double scoreFontScale;
     private double endFontScale;
     private static GlyphLayout scoreFontLayout;
     private static GlyphLayout endFontLayout;
+    private static GlyphLayout fontLayout;
     public enum ScoreType{
         SCORE, END
     }
@@ -35,13 +35,15 @@ public class MyGdxGame extends ApplicationAdapter{
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-        //positioning is half of height and width, negative
         player=new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
         grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
+        mainMenu=new MainMenu();
         deathMenu=new DeathMenu();
         generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        generator2=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         scoreFontLayout=new GlyphLayout();
         endFontLayout=new GlyphLayout();
+        fontLayout=new GlyphLayout();
         scoreFontScale=1;
         endFontScale=0.1;
 
@@ -57,6 +59,8 @@ public class MyGdxGame extends ApplicationAdapter{
         endFont = generator.generateFont(endParameter);
         endFont.getData().setScale((float)endFontScale, (float)endFontScale);
         generator.dispose();
+
+        fontParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
 	}
 
 	@Override
@@ -64,38 +68,42 @@ public class MyGdxGame extends ApplicationAdapter{
         Gdx.gl.glClearColor(1, 1, 1, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        if (!player.getDead()) {
-            grid.draw(batch);
-            player.draw(batch);
-
-            scoreFontLayout.setText(scoreFont, "" + MyGdxGame.getPlayer().getScore());
-            scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
-            if (scoreFontScale<1) {
-                scoreFontScale+=0.1;
-            }
-        } else {
-            player.draw(batch);
-            grid.draw(batch);
-
-            scoreFontLayout.setText(scoreFont, "" + player.getScore());
-            scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
-            if (scoreFontScale>0.1) {
-                scoreFontScale-=0.1;
-            }
+        if (!mainMenu.getStart()){
+            mainMenu.draw(batch);
         }
-        if (player.getWidth()<=0 && player.getHeight()<=0){
-            deathMenu.draw(batch);
-            endFontLayout.setText(endFont, ""+player.getScore());
-            endFont.getData().setScale((float) endFontScale, (float) endFontScale);
-            if (endFontScale<1) {
-                endFontScale+=0.05;
+        else if (mainMenu.getStart()) {
+            if (!player.getDead()) {
+                grid.draw(batch);
+                player.draw(batch);
+
+                scoreFontLayout.setText(scoreFont, "" + MyGdxGame.getPlayer().getScore());
+                scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+                if (scoreFontScale < 1) {
+                    scoreFontScale += 0.1;
+                }
+            } else {
+                player.draw(batch);
+                grid.draw(batch);
+
+                scoreFontLayout.setText(scoreFont, "" + player.getScore());
+                scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+                if (scoreFontScale > 0.1) {
+                    scoreFontScale -= 0.1;
+                }
             }
-        }
-        else{
-            endFontLayout.setText(endFont, ""+player.getScore());
-            endFont.getData().setScale((float) endFontScale, (float) endFontScale);
-            if (endFontScale>0.1) {
-                endFontScale-=0.05;
+            if (player.getWidth() <= 0 && player.getHeight() <= 0) {
+                deathMenu.draw(batch);
+                endFontLayout.setText(endFont, "" + player.getScore());
+                endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+                if (endFontScale < 1) {
+                    endFontScale += 0.05;
+                }
+            } else {
+                endFontLayout.setText(endFont, "" + player.getScore());
+                endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+                if (endFontScale > 0.1) {
+                    endFontScale -= 0.05;
+                }
             }
         }
         batch.end();
@@ -103,7 +111,6 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static void reset(){
         grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
-        player=new Player(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         deathMenu=new DeathMenu();
     }
 
@@ -118,12 +125,12 @@ public class MyGdxGame extends ApplicationAdapter{
         }
     }
 
-    public static boolean getRunning(){
-        return running;
-    }
-
     public static Player getPlayer(){
         return player;
+    }
+
+    public static void setPlayer(Player player){
+        MyGdxGame.player=player;
     }
 
     public static Grid getGrid(){
@@ -136,6 +143,14 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static DeathMenu getDeathMenu(){
         return deathMenu;
+    }
+
+    public static MainMenu getMainMenu(){
+        return mainMenu;
+    }
+
+    public static void setMainMenu(MainMenu mainMenu){
+        MyGdxGame.mainMenu=mainMenu;
     }
 
     public static FreeTypeFontGenerator.FreeTypeFontParameter getScoreParameter(){
