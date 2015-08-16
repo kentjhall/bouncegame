@@ -349,7 +349,12 @@ public class Grid {
                     hitX=column5-height/2;
 
                     emptyBox=boxCount;
-                    MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE, Color.BLACK);
+                    if (MyGdxGame.getPlayer().getScore()>MyGdxGame.getPlayer().getStartingHighScore() && MyGdxGame.getPlayer().getStartingHighScore()>0){
+                        MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE, null);
+                    }
+                    else{
+                        MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE, Color.BLACK);
+                    }
                     break;
                 case 30:
                     hitY=row1b-width/2;

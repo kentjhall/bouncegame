@@ -88,9 +88,10 @@ public class Button {
                         buttonDown=false;
                     }
                     if(hitBox.contains(Gdx.input.getX(), Gdx.input.getY())) {
-                        if (!buttonDown && goButton) {
-                            MyGdxGame.setMainMenu(new MainMenu());
+                        if (!buttonDown && goButton && growWidth>=1 && growHeight>=1) {
                             MyGdxGame.getMainMenu().setStart(false);
+                            MyGdxGame.getMainMenu().setCircleWidth(0);
+                            MyGdxGame.getMainMenu().setCircleHeight(0);
                         }
                     }
                 }
