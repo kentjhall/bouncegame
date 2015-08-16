@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,11 +30,14 @@ public class Player {
     private boolean hitGround;
     private boolean dead;
     private int score;
+    private int highScore;
     private double bounceSpeed;
     private double moveSpeed;
     private boolean scoring;
     private Sprite player;
     private boolean deathChange;
+    private Preferences prefs;
+    private int startingHighScore;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -46,6 +50,7 @@ public class Player {
         velPlayer=new Vector2(1, 1);
         growing=false;
         score=0;
+        highScore=0;
         startAccelX=0;
         startAccelY=0;
         bounceSpeed=2;
@@ -56,6 +61,8 @@ public class Player {
         hitBox=new Rectangle();
         player=new Sprite(img);
         deathChange=true;
+        prefs=Gdx.app.getPreferences("High Score");
+        startingHighScore=prefs.getInteger("highScore");
     }
 
     public void draw(SpriteBatch batch){
@@ -63,13 +70,28 @@ public class Player {
         player.setSize((float) width, (float) height);
         player.setTexture(img);
         player.draw(batch);
-        if (!deathChange && width>maxWidth/2 && height>maxHeight/2){
-            deathChange=true;
+        prefs.flush();
+        if (prefs.getInteger("highScore")>0){
+            if (score>prefs.getInteger("highScore")){
+                highScore=score;
+                prefs.putInteger("highScore", highScore);
+            }
         }
+        else{
+            if (score>highScore){
+                highScore=score;
+                prefs.putInteger("highScore", highScore);
+            }
+        }
+
+        if (!deathChange && width > maxWidth / 2 && height > maxHeight/2) {
+            deathChange = true;
+        }
+
+    wrap();
         hitBox.set(player.getBoundingRectangle());
         tilt();
         bounce();
-        wrap();
 
         //checks if player hit ground
         if (width<=minWidth && height<=minHeight){
@@ -286,5 +308,17 @@ public class Player {
 
     public Rectangle getHitBox(){
         return hitBox;
+    }
+
+    public Preferences getPrefs(){
+        return prefs;
+    }
+
+    public int getStartingHighScore(){
+        return startingHighScore;
+    }
+
+    public void setStartingHighScore(int startingHighScore){
+        this.startingHighScore=startingHighScore;
     }
 }

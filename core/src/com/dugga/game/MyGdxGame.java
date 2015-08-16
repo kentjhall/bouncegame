@@ -17,17 +17,16 @@ public class MyGdxGame extends ApplicationAdapter{
     private static DeathMenu deathMenu;
     private static boolean running=true;
     private static BitmapFont scoreFont;
+    private static BitmapFont scoreFont2;
     private static BitmapFont endFont;
     private static FreeTypeFontGenerator generator;
-    private static FreeTypeFontGenerator generator2;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter;
+    private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter2;
     private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private double scoreFontScale;
     private double endFontScale;
     private static GlyphLayout scoreFontLayout;
     private static GlyphLayout endFontLayout;
-    private static GlyphLayout fontLayout;
     public enum ScoreType{
         SCORE, END
     }
@@ -40,28 +39,29 @@ public class MyGdxGame extends ApplicationAdapter{
         mainMenu=new MainMenu();
         deathMenu=new DeathMenu();
         generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-        generator2=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         scoreFontLayout=new GlyphLayout();
         endFontLayout=new GlyphLayout();
-        fontLayout=new GlyphLayout();
         scoreFontScale=1;
         endFontScale=0.1;
 
         scoreParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
+        scoreParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
         scoreParameter.size=72;
+        scoreParameter2.size=72;
         scoreParameter.color= Color.BLACK;
+        scoreParameter2.color= Color.WHITE;
         scoreFont = generator.generateFont(scoreParameter);
+        scoreFont2=generator.generateFont(scoreParameter2);
         scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+        scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
 
         endParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
         endParameter.size=144;
         endParameter.color= Color.WHITE;
         endFont = generator.generateFont(endParameter);
-        endFont.getData().setScale((float)endFontScale, (float)endFontScale);
+        endFont.getData().setScale((float) endFontScale, (float) endFontScale);
         generator.dispose();
-
-        fontParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-	}
+    }
 
 	@Override
 	public void render () {
@@ -78,6 +78,8 @@ public class MyGdxGame extends ApplicationAdapter{
 
                 scoreFontLayout.setText(scoreFont, "" + MyGdxGame.getPlayer().getScore());
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+                scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+
                 if (scoreFontScale < 1) {
                     scoreFontScale += 0.1;
                 }
@@ -87,6 +89,8 @@ public class MyGdxGame extends ApplicationAdapter{
 
                 scoreFontLayout.setText(scoreFont, "" + player.getScore());
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+                scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
+
                 if (scoreFontScale > 0.1) {
                     scoreFontScale -= 0.1;
                 }
@@ -114,10 +118,15 @@ public class MyGdxGame extends ApplicationAdapter{
         deathMenu=new DeathMenu();
     }
 
-    public static void drawScore(float x, float y, ScoreType scoreType){
+    public static void drawScore(float x, float y, ScoreType scoreType, Color color){
         switch (scoreType){
             case SCORE:
-                scoreFont.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 4);
+                if (color==Color.BLACK) {
+                    scoreFont.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 4);
+                }
+                else{
+                    scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 4);
+                }
                 break;
             case END:
                 endFont.draw(batch, ""+player.getScore(), x - endFontLayout.width/2, y - endFontLayout.height/2);

@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,7 +32,6 @@ public class Grid {
     private ArrayList<Integer> smilePattern;
     private ArrayList<Integer> tenPattern;
     private Texture square;
-    private Texture squareW;
     private double growWidth;
     private double growHeight;
     private boolean growing;
@@ -51,7 +51,6 @@ public class Grid {
         smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
         tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
         square=new Texture("square.png");
-        squareW=new Texture("squareW.png");
         growWidth=0;
         growHeight=0;
         bounceCount=0;
@@ -350,8 +349,7 @@ public class Grid {
                     hitX=column5-height/2;
 
                     emptyBox=boxCount;
-                    batch.draw(squareW, hitX, hitY, width, height);
-                    MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE);
+                    MyGdxGame.drawScore(hitX + width / 2, hitY + height / 2, MyGdxGame.ScoreType.SCORE, Color.BLACK);
                     break;
                 case 30:
                     hitY=row1b-width/2;
@@ -479,7 +477,7 @@ public class Grid {
                     break;
             }
 
-            if (rand[boxCount]==0 && boxCount!=emptyBox){
+            if (rand[boxCount]==0 && emptyBox!=boxCount){
                 region=new TextureAtlas.AtlasRegion(square, hitX, hitY, width, height);
                 bounceSquare=new Sprite(region);
                 bounceSquare.setOriginCenter();
@@ -497,7 +495,7 @@ public class Grid {
                         if (bounceBlock[boxCount] && MyGdxGame.getPlayer().getDeathChange()) {
                             MyGdxGame.getPlayer().setDead(false);
                             MyGdxGame.getPlayer().setDeathChange(false);
-                            if (MyGdxGame.getPlayer().getScore() % 5 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
+                            if (MyGdxGame.getPlayer().getScore() % 3 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
                                 blockRarity += 1;
                             }
                             if (MyGdxGame.getPlayer().getScore() % 1 == 0 && MyGdxGame.getPlayer().getScore() != 0) {

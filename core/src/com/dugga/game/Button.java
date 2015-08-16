@@ -81,15 +81,17 @@ public class Button {
                         buttonDown = true;
                     }
                 }
-                if (hitBox.contains(Gdx.input.getX(), Gdx.input.getY()) && inputProcessor.touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
+                if (inputProcessor.touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
                     if (buttonDown) {
                         growWidth += 0.1;
                         growHeight += 0.1;
                         buttonDown=false;
                     }
-                    if (!buttonDown && goButton) {
-                        MyGdxGame.setMainMenu(new MainMenu());
-                        MyGdxGame.getMainMenu().setStart(false);
+                    if(hitBox.contains(Gdx.input.getX(), Gdx.input.getY())) {
+                        if (!buttonDown && goButton) {
+                            MyGdxGame.setMainMenu(new MainMenu());
+                            MyGdxGame.getMainMenu().setStart(false);
+                        }
                     }
                 }
                 break;
