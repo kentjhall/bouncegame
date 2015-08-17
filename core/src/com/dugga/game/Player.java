@@ -61,8 +61,9 @@ public class Player {
         hitBox=new Rectangle();
         player=new Sprite(img);
         deathChange=true;
-        prefs=Gdx.app.getPreferences("High Score");
+        prefs=Gdx.app.getPreferences("Save Data");
         startingHighScore=prefs.getInteger("highScore");
+        prefs.putInteger("gamesPlayed", prefs.getInteger("gamesPlayed")+1);
     }
 
     public void draw(SpriteBatch batch){
