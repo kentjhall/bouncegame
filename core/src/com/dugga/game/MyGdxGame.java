@@ -25,11 +25,12 @@ public class MyGdxGame extends ApplicationAdapter{
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter2;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter3;
     private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter;
-    private double scoreFontScale;
+    private static double scoreFontScale;
     private double endFontScale;
     private static GlyphLayout scoreFontLayout;
     private static GlyphLayout scoreFontLayout2;
     private static GlyphLayout endFontLayout;
+    private static GlyphLayout highScoreLayout;
     private static int count;
     private static boolean scoreWhite;
     public enum ScoreType{
@@ -47,6 +48,7 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreFontLayout=new GlyphLayout();
         scoreFontLayout2=new GlyphLayout();
         endFontLayout=new GlyphLayout();
+        highScoreLayout=new GlyphLayout();
         scoreFontScale=1;
         endFontScale=0.1;
         count=0;
@@ -55,9 +57,9 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
         scoreParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
         scoreParameter3=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreParameter.size=72;
-        scoreParameter2.size=72;
-        scoreParameter3.size=72;
+        scoreParameter.size=54;
+        scoreParameter2.size=54;
+        scoreParameter3.size=54;
         scoreParameter.color= Color.BLACK;
         scoreParameter2.color= Color.WHITE;
         scoreParameter3.color= Color.BLACK;
@@ -89,7 +91,7 @@ public class MyGdxGame extends ApplicationAdapter{
         if (count<40){
             count++;
         }
-        else if (count>=40){
+        else if (count>=40 && !player.getDead()){
             scoreWhite=!scoreWhite;
             count=0;
         }
@@ -102,8 +104,9 @@ public class MyGdxGame extends ApplicationAdapter{
                 grid.draw(batch);
                 player.draw(batch);
 
-                scoreFontLayout.setText(scoreFont, "" + MyGdxGame.getPlayer().getScore());
-                scoreFontLayout2.setText(scoreFont2, "" + MyGdxGame.getPlayer().getScore());
+                scoreFontLayout.setText(scoreFont, "" + player.getScore());
+                scoreFontLayout2.setText(scoreFont2, "" + player.getScore());
+                highScoreLayout.setText(scoreFont3, "Best:"+player.getPrefs().getInteger("highScore"));
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
@@ -111,12 +114,14 @@ public class MyGdxGame extends ApplicationAdapter{
                 if (scoreFontScale < 1) {
                     scoreFontScale += 0.1;
                 }
+                System.out.println(scoreFontScale);
             } else {
                 player.draw(batch);
                 grid.draw(batch);
 
                 scoreFontLayout.setText(scoreFont, "" + player.getScore());
-                scoreFontLayout2.setText(scoreFont2, "" + MyGdxGame.getPlayer().getScore());
+                scoreFontLayout2.setText(scoreFont2, "" + player.getScore());
+                highScoreLayout.setText(scoreFont3, "Best:"+player.getPrefs().getInteger("highScore"));
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
@@ -181,12 +186,20 @@ public class MyGdxGame extends ApplicationAdapter{
         return grid;
     }
 
+    public static void setGrid(Grid grid){
+        MyGdxGame.grid=grid;
+    }
+
     public static BitmapFont getScoreFont(){
         return scoreFont;
     }
 
     public static DeathMenu getDeathMenu(){
         return deathMenu;
+    }
+
+    public static void setDeathMenu (DeathMenu deathMenu){
+        MyGdxGame.deathMenu=deathMenu;
     }
 
     public static MainMenu getMainMenu(){
@@ -199,6 +212,14 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static FreeTypeFontGenerator.FreeTypeFontParameter getScoreParameter(){
         return scoreParameter;
+    }
+
+    public static BitmapFont getScoreFont3(){
+        return scoreFont3;
+    }
+
+    public static GlyphLayout getHighScoreLayout(){
+        return highScoreLayout;
     }
 
 }

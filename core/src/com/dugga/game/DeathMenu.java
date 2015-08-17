@@ -22,10 +22,6 @@ public class DeathMenu {
     private double growWidth;
     private double growHeight;
     private Sprite menuSprite;
-    private BitmapFont highScoreFont;
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter highScoreParameter;
-    private GlyphLayout highScoreLayout;
     public DeathMenu(){
         menuImg=new Texture("menu.png");
         width = 810;
@@ -37,18 +33,11 @@ public class DeathMenu {
         menuSprite=new Sprite(menuImg, width, height);
         menuSprite.setOriginCenter();
         menuSprite.setPosition(loc.x, loc.y);
-        generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-
-        highScoreLayout=new GlyphLayout();
-        highScoreParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        highScoreParameter.size=72;
-        highScoreParameter.color= Color.WHITE;
-        highScoreFont=generator.generateFont(highScoreParameter);
     }
 
     public void draw(SpriteBatch batch){
-        highScoreLayout.setText(highScoreFont, ""+MyGdxGame.getPlayer().getPrefs().getInteger("highScore"));
-        highScoreFont.getData().setScale((float)growWidth, (float)growHeight);
+        //highScoreLayout.setText(highScoreFont, "Best:"+MyGdxGame.getPlayer().getPrefs().getInteger("highScore"));
+        MyGdxGame.getScoreFont3().getData().setScale((float)growWidth, (float)growHeight);
         menuSprite.setScale((float)growWidth, (float)growHeight);
         menuSprite.draw(batch);
         if (growWidth<1){
@@ -59,7 +48,7 @@ public class DeathMenu {
         }
         restartButton.draw(batch);
         MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + Gdx.graphics.getHeight() / 2.75), MyGdxGame.ScoreType.END, null);
-        highScoreFont.draw(batch, ""+MyGdxGame.getPlayer().getPrefs().getInteger("highScore"), restartButton.getLocX()-highScoreLayout.width/2, (float) (restartButton.getLocY() + Gdx.graphics.getHeight() / 5.5));
+        MyGdxGame.getScoreFont3().draw(batch, "Best:" + MyGdxGame.getPlayer().getPrefs().getInteger("highScore"), restartButton.getLocX() - MyGdxGame.getHighScoreLayout().width / 2, (float) (restartButton.getLocY() + Gdx.graphics.getHeight() / 5.5));
     }
 
     public int getWidth(){

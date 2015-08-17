@@ -64,7 +64,7 @@ public class MainMenu {
     public void draw(final SpriteBatch batch){
         MyGdxGame.setPlayer(new Player(Gdx.graphics.getWidth() / 2 + (int) MyGdxGame.getPlayer().getWidth() / 2, Gdx.graphics.getHeight() / 2 + (int) MyGdxGame.getPlayer().getHeight() / 2));
         batch.draw(bg, 0, 0, width, height);
-        batch.draw(circleOutline, Gdx.graphics.getWidth() / 2-300/2, Gdx.graphics.getHeight() / 2-300/2, 300, 300);
+        batch.draw(circleOutline, Gdx.graphics.getWidth() / 2-290/2, Gdx.graphics.getHeight() / 2-290/2, 290, 290);
         batch.draw(circle, MyGdxGame.getPlayer().getLocPlayer().x-(float)circleWidth/2, MyGdxGame.getPlayer().getLocPlayer().y-(float)circleHeight/2, (float) circleWidth, (float) circleHeight);
         batch.draw(phone, Gdx.graphics.getWidth() / 2 - phoneWidth / 2, 100, phoneWidth, phoneHeight);
 
