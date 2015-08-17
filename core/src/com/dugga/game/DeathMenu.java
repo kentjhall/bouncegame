@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,8 @@ public class DeathMenu {
     private double growWidth;
     private double growHeight;
     private Sprite menuSprite;
+    private int count;
+    private boolean scoreWhite;
     public DeathMenu(){
         menuImg=new Texture("menu.png");
         width = 810;
@@ -41,8 +44,26 @@ public class DeathMenu {
         if (growHeight<1){
             growHeight+=0.05;
         }
+
+        if (count<40){
+            count++;
+        }
+        else if (count>=40){
+            scoreWhite=!scoreWhite;
+            count=0;
+        }
         restartButton.draw(batch);
-        MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + 550), MyGdxGame.ScoreType.END, null);
+        if (MyGdxGame.getPlayer().getScore()>MyGdxGame.getPlayer().getStartingHighScore() && MyGdxGame.getPlayer().getStartingHighScore()>0) {
+            if (scoreWhite) {
+                MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + 550), MyGdxGame.ScoreType.END, Color.WHITE);
+            }
+            else if (!scoreWhite) {
+                MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + 550), MyGdxGame.ScoreType.END, null);
+            }
+        }
+        else{
+            MyGdxGame.drawScore(restartButton.getLocX(), (float) (restartButton.getLocY() + 550), MyGdxGame.ScoreType.END, Color.WHITE);
+        }
         MyGdxGame.getScoreFont3().draw(batch, "Best:" + MyGdxGame.getPlayer().getPrefs().getInteger("highScore"), restartButton.getLocX() - MyGdxGame.getHighScoreLayout().width / 2, (float) (restartButton.getLocY() + 267));
     }
 

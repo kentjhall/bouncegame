@@ -20,16 +20,19 @@ public class MyGdxGame extends ApplicationAdapter{
     private static BitmapFont scoreFont2;
     private static BitmapFont scoreFont3;
     private static BitmapFont endFont;
+    private static BitmapFont endFont2;
     private static FreeTypeFontGenerator generator;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter2;
     private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter3;
     private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter;
+    private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter2;
     private static double scoreFontScale;
     private double endFontScale;
     private static GlyphLayout scoreFontLayout;
     private static GlyphLayout scoreFontLayout2;
     private static GlyphLayout endFontLayout;
+    private static GlyphLayout endFontLayout2;
     private static GlyphLayout highScoreLayout;
     private static GlyphLayout gamesPlayedLayout;
     private static int count;
@@ -49,6 +52,7 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreFontLayout=new GlyphLayout();
         scoreFontLayout2=new GlyphLayout();
         endFontLayout=new GlyphLayout();
+        endFontLayout2=new GlyphLayout();
         highScoreLayout=new GlyphLayout();
         gamesPlayedLayout=new GlyphLayout();
         scoreFontScale=1;
@@ -59,9 +63,9 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
         scoreParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
         scoreParameter3=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreParameter.size=54;
-        scoreParameter2.size=54;
-        scoreParameter3.size=54;
+        scoreParameter.size=63;
+        scoreParameter2.size=63;
+        scoreParameter3.size=63;
         scoreParameter.color= Color.BLACK;
         scoreParameter2.color= Color.WHITE;
         scoreParameter3.color= Color.BLACK;
@@ -77,10 +81,17 @@ public class MyGdxGame extends ApplicationAdapter{
         scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
 
         endParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
+        endParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
         endParameter.size=144;
+        endParameter2.size=144;
         endParameter.color= Color.WHITE;
+        endParameter2.color=Color.BLACK;
+        endParameter2.borderColor=Color.WHITE;
+        endParameter2.borderWidth=10;
         endFont = generator.generateFont(endParameter);
+        endFont2=generator.generateFont(endParameter2);
         endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+        endFont2.getData().setScale((float) endFontScale, (float) endFontScale);
         generator.dispose();
     }
 
@@ -136,13 +147,17 @@ public class MyGdxGame extends ApplicationAdapter{
             if (player.getWidth() <= 0 && player.getHeight() <= 0) {
                 deathMenu.draw(batch);
                 endFontLayout.setText(endFont, "" + player.getScore());
+                endFontLayout2.setText(endFont2, "" + player.getScore());
                 endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+                endFont2.getData().setScale((float) endFontScale, (float) endFontScale);
                 if (endFontScale < 1) {
                     endFontScale += 0.05;
                 }
             } else {
                 endFontLayout.setText(endFont, "" + player.getScore());
+                endFontLayout2.setText(endFont2, "" + player.getScore());
                 endFont.getData().setScale((float) endFontScale, (float) endFontScale);
+                endFont2.getData().setScale((float) endFontScale, (float) endFontScale);
                 if (endFontScale > 0.1) {
                     endFontScale -= 0.05;
                 }
@@ -164,7 +179,7 @@ public class MyGdxGame extends ApplicationAdapter{
                 }
                 else{
                     if (scoreWhite && scoreFontScale>0.1){
-                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout.height / 2);
+                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 2);
                     }
                     else if (!scoreWhite && scoreFontScale>0.1){
                         scoreFont3.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout.height / 2);
@@ -172,7 +187,12 @@ public class MyGdxGame extends ApplicationAdapter{
                 }
                 break;
             case END:
-                endFont.draw(batch, ""+player.getScore(), x - endFontLayout.width/2, y - endFontLayout.height/2);
+                if (color==Color.WHITE) {
+                    endFont.draw(batch, "" + player.getScore(), x - endFontLayout.width / 2, y - endFontLayout.height / 2);
+                }
+                else{
+                    endFont2.draw(batch, "" + player.getScore(), x - endFontLayout2.width / 2, y - endFontLayout2.height / 2);
+                }
                 break;
         }
     }
@@ -195,6 +215,10 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static BitmapFont getScoreFont(){
         return scoreFont;
+    }
+
+    public static BitmapFont getEndFont(){
+        return endFont;
     }
 
     public static DeathMenu getDeathMenu(){
@@ -227,6 +251,10 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static GlyphLayout getGamesPlayedLayout(){
         return gamesPlayedLayout;
+    }
+
+    public static GlyphLayout getEndFontLayout(){
+        return endFontLayout;
     }
 
 }
