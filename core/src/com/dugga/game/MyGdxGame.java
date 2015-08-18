@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Timer;
 
 public class MyGdxGame extends Game {
 	private static SpriteBatch batch;
+    private SpriteBatch splashBatch;
     private static MainMenu mainMenu;
     private static Player player;
     private static Grid grid;
@@ -30,6 +32,10 @@ public class MyGdxGame extends Game {
     private static GlyphLayout highScoreLayout;
     private static int count;
     private static boolean scoreWhite;
+    private boolean splash;
+    private boolean splashFade;
+    private Texture splashImg;
+    private double splashAlpha;
     public enum ScoreType{
         SCORE, END
     }
@@ -37,6 +43,7 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
         batch = new SpriteBatch();
+        splashBatch=new SpriteBatch();
         player=new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
         grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
         mainMenu=new MainMenu();
@@ -50,6 +57,8 @@ public class MyGdxGame extends Game {
         endFontScale=0.1;
         count=0;
         scoreWhite=false;
+        splashImg=new Texture("splash.png");
+        splashAlpha=0;
 
         scoreFont = new BitmapFont(Gdx.files.internal("fonts/scoreFont.fnt"),Gdx.files.internal("fonts/scoreFont.png"),false);
         scoreFont2=new BitmapFont(Gdx.files.internal("fonts/scoreFont2.fnt"),Gdx.files.internal("fonts/scoreFont2.png"),false);
@@ -62,13 +71,15 @@ public class MyGdxGame extends Game {
         endFont2=new BitmapFont(Gdx.files.internal("fonts/endFont2.fnt"),Gdx.files.internal("fonts/endFont2.png"),false);
         endFont.getData().setScale((float) endFontScale, (float) endFontScale);
         endFont2.getData().setScale((float) endFontScale, (float) endFontScale);
+
+        splash=true;
+        splashFade=false;
     }
 
 	@Override
 	public void render () {
         Gdx.gl.glClearColor(1, 1, 1, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
 
         if (count<40){
             count++;
@@ -78,11 +89,38 @@ public class MyGdxGame extends Game {
             count=0;
         }
 
-        if (!mainMenu.getStart()){
+        splashBatch.begin();
+        if (splash){
+            Gdx.gl.glClearColor(0, 0, 0, 0);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            splashBatch.setColor(1, 1, 1, (float) splashAlpha);
+
+            splashBatch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            if (splashAlpha<1 && !splashFade){
+                splashAlpha+=0.05;
+            }
+            else if (splashAlpha>0 && splashFade){
+                splashAlpha-=0.05;
+            }
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    splashFade = true;
+                    if (splashAlpha <= 0) {
+                        splash = false;
+                    }
+                }
+            }, 3);
+        }
+        splashBatch.end();
+        batch.begin();
+
+        if (!mainMenu.getStart() && !splash){
             scoreFont.getData().setScale(1, 1);
             mainMenu.draw(batch);
         }
-        if (mainMenu.getStart()) {
+        if (mainMenu.getStart() && !splash) {
             if (!player.getDead()) {
                 grid.draw(batch);
                 player.draw(batch);

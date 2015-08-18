@@ -540,7 +540,7 @@ public class Grid {
                             growing = false;
                         }
                 }
-                //delays block refresh based on bounce speed
+                //delays block refresh at something
             }, 0);
         }
         //updates blocks randomly, as long as pattern is not meant to appear
