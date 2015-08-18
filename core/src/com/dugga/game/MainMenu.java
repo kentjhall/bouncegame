@@ -1,12 +1,10 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -30,9 +28,6 @@ public class MainMenu {
     private Texture check;
     private BitmapFont titleFont;
     private BitmapFont tiltFont;
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter titleParameter;
-    private FreeTypeFontGenerator.FreeTypeFontParameter tiltParameter;
     private GlyphLayout titleLayout;
     private GlyphLayout titleLayout2;
     private GlyphLayout tiltLayout;
@@ -56,7 +51,6 @@ public class MainMenu {
         upArrow=new Texture("upArrow.png");
         downArrow=new Texture("downArrow.png");
         check=new Texture("check.png");
-        generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         arrowVisible=true;
         count=0;
         phoneLoc=new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2-phoneHeight/2);
@@ -65,17 +59,10 @@ public class MainMenu {
 
         titleLayout=new GlyphLayout();
         titleLayout2=new GlyphLayout();
-        titleParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        titleParameter.size=115;
-        titleParameter.color=Color.BLACK;
-        titleFont=generator.generateFont(titleParameter);
+        titleFont=new BitmapFont(Gdx.files.internal("fonts/titleFont.fnt"),Gdx.files.internal("fonts/titleFont.png"),false);
 
         tiltLayout=new GlyphLayout();
-        tiltParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        tiltParameter.size=36;
-        tiltParameter.color=Color.BLACK;
-        tiltFont=generator.generateFont(tiltParameter);
-        generator.dispose();
+        tiltFont=new BitmapFont(Gdx.files.internal("fonts/tiltFont.fnt"),Gdx.files.internal("fonts/tiltFont.png"),false);
     }
 
     public void draw(SpriteBatch batch){

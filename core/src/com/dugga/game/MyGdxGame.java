@@ -4,10 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class MyGdxGame extends Game {
 	private static SpriteBatch batch;
@@ -21,12 +21,6 @@ public class MyGdxGame extends Game {
     private static BitmapFont scoreFont3;
     private static BitmapFont endFont;
     private static BitmapFont endFont2;
-    private static FreeTypeFontGenerator generator;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter2;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter scoreParameter3;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter;
-    private static FreeTypeFontGenerator.FreeTypeFontParameter endParameter2;
     private static double scoreFontScale;
     private double endFontScale;
     private static GlyphLayout scoreFontLayout;
@@ -47,7 +41,6 @@ public class MyGdxGame extends Game {
         grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
         mainMenu=new MainMenu();
         deathMenu=new DeathMenu();
-        generator=new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         scoreFontLayout=new GlyphLayout();
         scoreFontLayout2=new GlyphLayout();
         endFontLayout=new GlyphLayout();
@@ -58,39 +51,17 @@ public class MyGdxGame extends Game {
         count=0;
         scoreWhite=false;
 
-        scoreParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreParameter3=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        scoreParameter.size=63;
-        scoreParameter2.size=63;
-        scoreParameter3.size=63;
-        scoreParameter.color= Color.BLACK;
-        scoreParameter2.color= Color.WHITE;
-        scoreParameter3.color= Color.BLACK;
-        scoreParameter2.borderColor=Color.BLACK;
-        scoreParameter2.borderWidth=5;
-        scoreParameter3.borderColor=Color.WHITE;
-        scoreParameter3.borderWidth=5;
-        scoreFont = generator.generateFont(scoreParameter);
-        scoreFont2=generator.generateFont(scoreParameter2);
-        scoreFont3=generator.generateFont(scoreParameter3);
+        scoreFont = new BitmapFont(Gdx.files.internal("fonts/scoreFont.fnt"),Gdx.files.internal("fonts/scoreFont.png"),false);
+        scoreFont2=new BitmapFont(Gdx.files.internal("fonts/scoreFont2.fnt"),Gdx.files.internal("fonts/scoreFont2.png"),false);
+        scoreFont3=new BitmapFont(Gdx.files.internal("fonts/scoreFont3.fnt"),Gdx.files.internal("fonts/scoreFont3.png"),false);
         scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
         scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
         scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
 
-        endParameter=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        endParameter2=new FreeTypeFontGenerator.FreeTypeFontParameter();
-        endParameter.size=144;
-        endParameter2.size=144;
-        endParameter.color= Color.WHITE;
-        endParameter2.color=Color.BLACK;
-        endParameter2.borderColor=Color.WHITE;
-        endParameter2.borderWidth=10;
-        endFont = generator.generateFont(endParameter);
-        endFont2=generator.generateFont(endParameter2);
+        endFont = new BitmapFont(Gdx.files.internal("fonts/endFont.fnt"),Gdx.files.internal("fonts/endFont.png"),false);
+        endFont2=new BitmapFont(Gdx.files.internal("fonts/endFont2.fnt"),Gdx.files.internal("fonts/endFont2.png"),false);
         endFont.getData().setScale((float) endFontScale, (float) endFontScale);
         endFont2.getData().setScale((float) endFontScale, (float) endFontScale);
-        generator.dispose();
     }
 
 	@Override
@@ -176,16 +147,16 @@ public class MyGdxGame extends Game {
                 }
                 else{
                     if (scoreWhite && scoreFontScale>0.1){
-                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 2);
+                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 4);
                     }
                     else if (!scoreWhite && scoreFontScale>0.1){
-                        scoreFont3.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 2);
+                        scoreFont3.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 4);
                     }
                 }
                 break;
             case END:
                 if (color==Color.WHITE) {
-                    endFont.draw(batch, "" + player.getScore(), x - endFontLayout.width / 2, y - endFontLayout.height / 2);
+                    endFont.draw(batch, "" + player.getScore(), x - endFontLayout.width / 2, y - endFontLayout.height/2);
                 }
                 else{
                     endFont2.draw(batch, "" + player.getScore(), x - endFontLayout2.width / 2, y - endFontLayout2.height / 2);
@@ -237,10 +208,6 @@ public class MyGdxGame extends Game {
 
     public static void setMainMenu(MainMenu mainMenu){
         MyGdxGame.mainMenu=mainMenu;
-    }
-
-    public static FreeTypeFontGenerator.FreeTypeFontParameter getScoreParameter(){
-        return scoreParameter;
     }
 
     public static BitmapFont getScoreFont3(){
