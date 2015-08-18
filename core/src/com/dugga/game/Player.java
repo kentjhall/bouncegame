@@ -128,24 +128,6 @@ public class Player {
         else if ((int)accelX==(int)startAccelX-5 || (int)accelX==(int)startAccelX+5){
             velPlayer.x=10*(float)moveSpeed;
         }
-        /*else if ((int)accelX==(int)startAccelX-6 || (int)accelX==(int)startAccelX+6){
-            velPlayer.x=10*(float)moveSpeed;
-        }
-        else if ((int)accelX==(int)startAccelX-7 || (int)accelX==(int)startAccelX+7){
-            velPlayer.x=12*(float)moveSpeed;
-        }
-        else if ((int)accelX==(int)startAccelX-8 || (int)accelX==(int)startAccelX+8){
-            velPlayer.x=14*(float)moveSpeed;
-        }
-        else if ((int)accelX==(int)startAccelX-9 || (int)accelX==(int)startAccelX+9){
-            velPlayer.x=16*(float)moveSpeed;
-        }
-        else if ((int)accelX==(int)startAccelX-10 || (int)accelX==(int)startAccelX+10){
-            velPlayer.x=18*(float)moveSpeed;
-        }
-        else{
-            velPlayer.x=20*(float)moveSpeed;
-        }*/
 
         if ((int)accelY==(int)startAccelY){
             velPlayer.y=0*(float)moveSpeed;
@@ -165,24 +147,6 @@ public class Player {
         else if ((int)accelY==(int)startAccelY-5 || (int)accelY==(int)startAccelY+5){
             velPlayer.y=10*(float)moveSpeed;
         }
-        /*else if ((int)accelY==(int)startAccelY-6 || (int)accelY==(int)startAccelY+6){
-            velPlayer.y=10*(float)moveSpeed;
-        }
-        else if ((int)accelY==(int)startAccelY-7 || (int)accelY==(int)startAccelY+7){
-            velPlayer.y=12*(float)moveSpeed;
-        }
-        else if ((int)accelY==(int)startAccelY-8 || (int)accelY==(int)startAccelY+8){
-            velPlayer.y=14*(float)moveSpeed;
-        }
-        else if ((int)accelY==(int)startAccelY-9 || (int)accelY==(int)startAccelY+9){
-            velPlayer.y=16*(float)moveSpeed;
-        }
-        else if ((int)accelY==(int)startAccelY-10 || (int)accelY==(int)startAccelY+10){
-            velPlayer.y=18*(float)moveSpeed;
-        }
-        else{
-            velPlayer.y=20*(float)moveSpeed;
-        }*/
 
 
         //when tilting right

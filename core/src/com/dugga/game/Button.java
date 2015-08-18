@@ -35,7 +35,7 @@ public class Button {
         this.locX=locX;
         this.locY=locY;
         loc=new Vector2(locX-width/2, locY-height/2);
-        buttonImg=new Texture("squareW.png");
+        buttonImg=new Texture("bg.png");
         switch (buttonType){
             case RESTART:
                 buttonImg=new Texture("retryButton.png");

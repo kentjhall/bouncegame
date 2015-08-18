@@ -1,6 +1,6 @@
 package com.dugga.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-public class MyGdxGame extends ApplicationAdapter{
+public class MyGdxGame extends Game {
 	private static SpriteBatch batch;
     private static MainMenu mainMenu;
     private static Player player;
@@ -34,7 +34,6 @@ public class MyGdxGame extends ApplicationAdapter{
     private static GlyphLayout endFontLayout;
     private static GlyphLayout endFontLayout2;
     private static GlyphLayout highScoreLayout;
-    private static GlyphLayout gamesPlayedLayout;
     private static int count;
     private static boolean scoreWhite;
     public enum ScoreType{
@@ -43,7 +42,7 @@ public class MyGdxGame extends ApplicationAdapter{
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
+        batch = new SpriteBatch();
         player=new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
         grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
         mainMenu=new MainMenu();
@@ -54,7 +53,6 @@ public class MyGdxGame extends ApplicationAdapter{
         endFontLayout=new GlyphLayout();
         endFontLayout2=new GlyphLayout();
         highScoreLayout=new GlyphLayout();
-        gamesPlayedLayout=new GlyphLayout();
         scoreFontScale=1;
         endFontScale=0.1;
         count=0;
@@ -110,6 +108,7 @@ public class MyGdxGame extends ApplicationAdapter{
         }
 
         if (!mainMenu.getStart()){
+            scoreFont.getData().setScale(1, 1);
             mainMenu.draw(batch);
         }
         if (mainMenu.getStart()) {
@@ -120,7 +119,6 @@ public class MyGdxGame extends ApplicationAdapter{
                 scoreFontLayout.setText(scoreFont, "" + player.getScore());
                 scoreFontLayout2.setText(scoreFont2, "" + player.getScore());
                 highScoreLayout.setText(scoreFont3, "Best:" + player.getPrefs().getInteger("highScore"));
-                gamesPlayedLayout.setText(scoreFont3, "Games Played:" + player.getPrefs().getInteger("gamesPlayed"));
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
@@ -135,7 +133,6 @@ public class MyGdxGame extends ApplicationAdapter{
                 scoreFontLayout.setText(scoreFont, "" + player.getScore());
                 scoreFontLayout2.setText(scoreFont2, "" + player.getScore());
                 highScoreLayout.setText(scoreFont3, "Best:"+player.getPrefs().getInteger("highScore"));
-                gamesPlayedLayout.setText(scoreFont3, "Games Played: " + player.getPrefs().getInteger("gamesPlayed"));
                 scoreFont.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont2.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
                 scoreFont3.getData().setScale((float) scoreFontScale, (float) scoreFontScale);
@@ -179,10 +176,10 @@ public class MyGdxGame extends ApplicationAdapter{
                 }
                 else{
                     if (scoreWhite && scoreFontScale>0.1){
-                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout.width / 2, y - scoreFontLayout.height / 2);
+                        scoreFont2.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 2);
                     }
                     else if (!scoreWhite && scoreFontScale>0.1){
-                        scoreFont3.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout.height / 2);
+                        scoreFont3.draw(batch, "" + player.getScore(), x - scoreFontLayout2.width / 2, y - scoreFontLayout2.height / 2);
                     }
                 }
                 break;
@@ -195,6 +192,11 @@ public class MyGdxGame extends ApplicationAdapter{
                 }
                 break;
         }
+    }
+
+    @Override
+    public void dispose(){
+        batch.dispose();
     }
 
     public static Player getPlayer(){
@@ -247,10 +249,6 @@ public class MyGdxGame extends ApplicationAdapter{
 
     public static GlyphLayout getHighScoreLayout(){
         return highScoreLayout;
-    }
-
-    public static GlyphLayout getGamesPlayedLayout(){
-        return gamesPlayedLayout;
     }
 
     public static GlyphLayout getEndFontLayout(){
