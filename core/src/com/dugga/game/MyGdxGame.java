@@ -36,6 +36,7 @@ public class MyGdxGame extends Game {
     private boolean splashFade;
     private Texture splashImg;
     private double splashAlpha;
+    private double batchAlpha;
     public enum ScoreType{
         SCORE, END
     }
@@ -59,6 +60,7 @@ public class MyGdxGame extends Game {
         scoreWhite=false;
         splashImg=new Texture("splash.png");
         splashAlpha=0;
+        batchAlpha=0;
 
         scoreFont = new BitmapFont(Gdx.files.internal("fonts/scoreFont.fnt"),Gdx.files.internal("fonts/scoreFont.png"),false);
         scoreFont2=new BitmapFont(Gdx.files.internal("fonts/scoreFont2.fnt"),Gdx.files.internal("fonts/scoreFont2.png"),false);
@@ -91,8 +93,14 @@ public class MyGdxGame extends Game {
 
         splashBatch.begin();
         if (splash){
-            Gdx.gl.glClearColor(0, 0, 0, 0);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            if (!splashFade) {
+                Gdx.gl.glClearColor(0, 0, 0, 0);
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            }
+            else{
+                Gdx.gl.glClearColor(1, 1, 1, 0);
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            }
             splashBatch.setColor(1, 1, 1, (float) splashAlpha);
 
             splashBatch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -111,14 +119,18 @@ public class MyGdxGame extends Game {
                         splash = false;
                     }
                 }
-            }, 3);
+            }, 2);
         }
         splashBatch.end();
         batch.begin();
 
         if (!mainMenu.getStart() && !splash){
+            batch.setColor(1, 1, 1, (float)batchAlpha);
             scoreFont.getData().setScale(1, 1);
             mainMenu.draw(batch);
+            if (batchAlpha<1){
+                batchAlpha+=0.05;
+            }
         }
         if (mainMenu.getStart() && !splash) {
             if (!player.getDead()) {
