@@ -46,6 +46,8 @@ public class Player {
     private float stateTime;
     private boolean playDust;
     private Vector2 locDust;
+    private double dustInterval;
+    private final double initialBounceSpeed;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -61,7 +63,8 @@ public class Player {
         highScore=0;
         startAccelX=0;
         startAccelY=0;
-        bounceSpeed=2;
+        initialBounceSpeed=2;
+        bounceSpeed=initialBounceSpeed;
         moveSpeed=bounceSpeed*0.5;
         dead=false;
         img=new Texture("circle.png");
@@ -78,14 +81,17 @@ public class Player {
         for (int i=0; i<dust.length; i++){
             dust[i]=new TextureRegion(new Texture("animation/dust/dust"+(i+1)+".png"));
         }
-        dustAnimation=new Animation(0.035f, dust[0], dust[1], dust[2], dust[3], dust[4], dust[5], dust[6], dust[7], dust[8]);
+        dustInterval=0.035;
+        dustAnimation=new Animation((float)dustInterval, dust[0], dust[1], dust[2], dust[3], dust[4], dust[5], dust[6], dust[7], dust[8]);
         playDust=false;
         stateTime=0f;
     }
 
     public void draw(SpriteBatch batch){
+        System.out.println(dustInterval);
         if(playDust){
             playDustAnimation(batch);
+            dustAnimation.setFrameDuration((float)dustInterval);
         }
         player.setPosition(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2);
         player.setSize((float) width, (float) height);
@@ -317,5 +323,17 @@ public class Player {
 
     public void setStartingHighScore(int startingHighScore){
         this.startingHighScore=startingHighScore;
+    }
+
+    public void setDustInterval(double dustInterval){
+        this.dustInterval=dustInterval;
+    }
+
+    public double getDustInterval(){
+        return dustInterval;
+    }
+
+    public double getInitialBounceSpeed(){
+        return initialBounceSpeed;
     }
 }
