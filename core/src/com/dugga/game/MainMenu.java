@@ -35,6 +35,7 @@ public class MainMenu {
     private GlyphLayout gamesPlayedLayout;
     private int count;
     private Vector2 phoneLoc;
+    private boolean playerSet;
 
     public MainMenu(){
         start=false;
@@ -56,6 +57,7 @@ public class MainMenu {
         phoneLoc=new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2-phoneHeight/2);
         highScoreLayout=new GlyphLayout();
         gamesPlayedLayout=new GlyphLayout();
+        playerSet=true;
 
         titleLayout=new GlyphLayout();
         titleLayout2=new GlyphLayout();
@@ -66,7 +68,10 @@ public class MainMenu {
     }
 
     public void draw(SpriteBatch batch){
-        MyGdxGame.setPlayer(new Player(Gdx.graphics.getWidth() / 2 + (int) MyGdxGame.getPlayer().getWidth() / 2, Gdx.graphics.getHeight() / 2 + (int) MyGdxGame.getPlayer().getHeight() / 2));
+        if (playerSet) {
+            MyGdxGame.setPlayer(new Player(Gdx.graphics.getWidth() / 2 + 150, Gdx.graphics.getHeight() / 2 + 150));
+            playerSet=false;
+        }
         batch.draw(bg, 0, 0, width, height);
         batch.draw(circleOutline, Gdx.graphics.getWidth() / 2-290/2, Gdx.graphics.getHeight() / 2-290/2, 290, 290);
         batch.draw(circle, MyGdxGame.getPlayer().getLocPlayer().x-(float)circleWidth/2, MyGdxGame.getPlayer().getLocPlayer().y-(float)circleHeight/2, (float) circleWidth, (float) circleHeight);
@@ -114,6 +119,7 @@ public class MainMenu {
             }
         }
 
+        //executes when circle is big enough, initiating play
         if (circleWidth>=300 && circleHeight>= 300){
             MyGdxGame.reset();
             start=true;
@@ -134,5 +140,9 @@ public class MainMenu {
 
     public void setCircleHeight(double circleHeight){
         this.circleHeight=circleHeight;
+    }
+
+    public void setPlayerSet(boolean playerSet){
+        this.playerSet=playerSet;
     }
 }

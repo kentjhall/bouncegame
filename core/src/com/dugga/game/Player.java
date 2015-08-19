@@ -3,8 +3,10 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -38,6 +40,12 @@ public class Player {
     private boolean deathChange;
     private Preferences prefs;
     private int startingHighScore;
+    private Animation dustAnimation;
+    private TextureRegion[] dust;
+    private TextureRegion dustFrame;
+    private float stateTime;
+    private boolean playDust;
+    private Vector2 locDust;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -64,9 +72,21 @@ public class Player {
         prefs=Gdx.app.getPreferences("Save Data");
         startingHighScore=prefs.getInteger("highScore");
         prefs.putInteger("gamesPlayed", prefs.getInteger("gamesPlayed")+1);
+        locDust=new Vector2(0, 0);
+
+        dust=new TextureRegion[9];
+        for (int i=0; i<dust.length; i++){
+            dust[i]=new TextureRegion(new Texture("animation/dust/dust"+(i+1)+".png"));
+        }
+        dustAnimation=new Animation(0.035f, dust[0], dust[1], dust[2], dust[3], dust[4], dust[5], dust[6], dust[7], dust[8]);
+        playDust=false;
+        stateTime=0f;
     }
 
     public void draw(SpriteBatch batch){
+        if(playDust){
+            playDustAnimation(batch);
+        }
         player.setPosition(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2);
         player.setSize((float) width, (float) height);
         player.setTexture(img);
@@ -183,6 +203,8 @@ public class Player {
             }
             else if (!dead){
                 growing=true;
+                playDust=true;
+                locDust=new Vector2(locPlayer);
             }
         }
 
@@ -220,6 +242,16 @@ public class Player {
         }
         if (locPlayer.y-height/2>Gdx.graphics.getHeight()){
             locPlayer.y=0-(float)height/2;
+        }
+    }
+
+    public void playDustAnimation(SpriteBatch batch){
+        stateTime+=Gdx.graphics.getDeltaTime();
+        dustFrame=dustAnimation.getKeyFrame(stateTime, false);
+        batch.draw(dustFrame, locDust.x-dustFrame.getRegionWidth()/2, locDust.y-dustFrame.getRegionHeight()/2);
+        if (dustAnimation.isAnimationFinished(stateTime)){
+            stateTime=0f;
+            playDust=false;
         }
     }
 

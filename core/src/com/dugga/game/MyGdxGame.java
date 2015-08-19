@@ -45,10 +45,7 @@ public class MyGdxGame extends Game {
 	public void create () {
         batch = new SpriteBatch();
         splashBatch=new SpriteBatch();
-        player=new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-        grid=new Grid(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Gdx.graphics.getWidth());
         mainMenu=new MainMenu();
-        deathMenu=new DeathMenu();
         scoreFontLayout=new GlyphLayout();
         scoreFontLayout2=new GlyphLayout();
         endFontLayout=new GlyphLayout();
@@ -82,14 +79,6 @@ public class MyGdxGame extends Game {
 	public void render () {
         Gdx.gl.glClearColor(1, 1, 1, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (count<40){
-            count++;
-        }
-        else if (count>=40 && !player.getDead()){
-            scoreWhite=!scoreWhite;
-            count=0;
-        }
 
         splashBatch.begin();
         if (splash){
@@ -133,6 +122,13 @@ public class MyGdxGame extends Game {
             }
         }
         if (mainMenu.getStart() && !splash) {
+            if (count<40){
+                count++;
+            }
+            else if (count>=40 && !player.getDead()){
+                scoreWhite=!scoreWhite;
+                count=0;
+            }
             if (!player.getDead()) {
                 grid.draw(batch);
                 player.draw(batch);

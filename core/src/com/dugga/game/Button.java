@@ -92,6 +92,7 @@ public class Button {
                             MyGdxGame.getMainMenu().setStart(false);
                             MyGdxGame.getMainMenu().setCircleWidth(0);
                             MyGdxGame.getMainMenu().setCircleHeight(0);
+                            MyGdxGame.getMainMenu().setPlayerSet(true);
                         }
                     }
                 }
