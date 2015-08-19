@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Vector2;
  * Created by student on 7/30/2015.
  */
 public class Player {
-    private Texture img;
     private Rectangle hitBox;
     private float startAccelX;
     private float startAccelY;
@@ -46,6 +45,20 @@ public class Player {
     private float stateTime;
     private boolean playDust;
     private Vector2 locDust;
+    private Texture playerC;
+    private Texture playerBL;
+    private Texture playerTL;
+    private Texture playerBR;
+    private Texture playerTR;
+    private Texture playerU;
+    private Texture playerD;
+    private Texture playerR;
+    private Texture playerL;
+
+    private enum Direction{
+        UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
+    }
+    private Direction playerDirection;
 
     public Player(int locX, int locY){
         maxWidth=300;
@@ -64,10 +77,19 @@ public class Player {
         bounceSpeed=2;
         moveSpeed=bounceSpeed*0.5;
         dead=false;
-        img=new Texture("circle.png");
+        playerC=new Texture("player/center.png");
+        playerBL=new Texture("player/bottomleft.png");
+        playerTL=new Texture("player/topleft.png");
+        playerBR=new Texture("player/bottomright.png");
+        playerTR=new Texture("player/topright.png");
+        playerU=new Texture("player/up.png");
+        playerD=new Texture("player/down.png");
+        playerR=new Texture("player/right.png");
+        playerL=new Texture("player/left.png");
         scoring=false;
         hitBox=new Rectangle();
-        player=new Sprite(img);
+        player=new Sprite(playerC);
+        playerDirection=Direction.STILL;
         deathChange=true;
         prefs=Gdx.app.getPreferences("Save Data");
         startingHighScore=prefs.getInteger("highScore");
@@ -89,7 +111,34 @@ public class Player {
         }
         player.setPosition(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2);
         player.setSize((float) width, (float) height);
-        player.setTexture(img);
+        switch(playerDirection){
+            case STILL:
+                player.setTexture(playerC);
+                break;
+            case UP:
+                player.setTexture(playerU);
+                break;
+            case DOWN:
+                player.setTexture(playerD);
+                break;
+            case LEFT:
+                player.setTexture(playerL);
+                break;
+            case RIGHT:
+                player.setTexture(playerR);
+                break;
+            case UPLEFT:
+                player.setTexture(playerTL);
+                break;
+            case UPRIGHT:
+                player.setTexture(playerTR);
+                break;
+            case DOWNLEFT:
+                player.setTexture(playerBL);
+                break;
+            case DOWNRIGHT:
+                player.setTexture(playerBR);
+        }
         player.draw(batch);
         prefs.flush();
         if (prefs.getInteger("highScore")>0){
@@ -109,7 +158,7 @@ public class Player {
             deathChange = true;
         }
 
-    wrap();
+        wrap();
         hitBox.set(player.getBoundingRectangle());
         tilt();
         bounce();
@@ -168,23 +217,43 @@ public class Player {
             velPlayer.y=10*(float)moveSpeed;
         }
 
-
-        //when tilting right
-        if ((int)accelX<-1) {
-            locPlayer.x += velPlayer.x;
-        }
-        //when tilting left
-        else if ((int)accelX>1){
-            locPlayer.x -= velPlayer.x;
-        }
-
         //when tilting up
         if ((int)accelY<-1) {
             locPlayer.y += velPlayer.y;
+            playerDirection=Direction.UP;
         }
         //when tilting down
         else if ((int)accelY>1){
             locPlayer.y -= velPlayer.y;
+            playerDirection=Direction.DOWN;
+        }
+
+        //when tilting right
+        if ((int)accelX<-1) {
+            locPlayer.x += velPlayer.x;
+            playerDirection=Direction.RIGHT;
+        }
+        //when tilting left
+        else if ((int)accelX>1){
+            locPlayer.x -= velPlayer.x;
+            playerDirection=Direction.LEFT;
+        }
+
+        if ((int)accelX<0 && (int)accelY<0){
+            playerDirection=Direction.UPRIGHT;
+        }
+        else if ((int)accelX>0 && (int)accelY<0){
+            playerDirection=Direction.UPLEFT;
+        }
+        else if ((int)accelX<0 && (int)accelY>0){
+            playerDirection=Direction.DOWNRIGHT;
+        }
+        else if ((int)accelX>0 && (int)accelY>0){
+            playerDirection=Direction.DOWNLEFT;
+        }
+
+        if (velPlayer.x==0 && velPlayer.y==0){
+            playerDirection=Direction.STILL;
         }
 
     }

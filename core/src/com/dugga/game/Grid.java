@@ -3,9 +3,11 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
@@ -487,7 +489,7 @@ public class Grid {
                 bounceSquare.setOriginCenter();
                 bounceSquare.setPosition(hitX, hitY);
                 bounceSquare.setScale((float) growWidth, (float) growHeight);
-                bounceSquare.setTexture(square);
+                bounceSquare.setColor(Color.RED);
                 bounceSquare.draw(batch);
                 bounceBlock[boxCount]=true;
             }
