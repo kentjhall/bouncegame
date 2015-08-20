@@ -110,7 +110,6 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch){
-        System.out.println(dustInterval);
         if(playDust){
             playDustAnimation(batch);
             dustAnimation.setFrameDuration((float)dustInterval);
