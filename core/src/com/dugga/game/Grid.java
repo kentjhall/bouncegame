@@ -507,6 +507,7 @@ public class Grid {
                             if (MyGdxGame.getPlayer().getScore() % 1 == 0 && MyGdxGame.getPlayer().getScore() != 0) {
                                 if (MyGdxGame.getPlayer().getBounceSpeed() <= 10) {
                                     MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
+                                    MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval()-0.0002);
                                 }
                             }
                         }
