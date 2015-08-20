@@ -521,7 +521,6 @@ public class Grid {
 //            }
 
             hitBox[boxCount] = new Rectangle(hitX, hitY, width, height);
-
             if (MyGdxGame.getPlayer().getHitGround()) {
                 if (hitBox[boxCount].overlaps(MyGdxGame.getPlayer().getHitBox())) {
                     if (bounceBlock[boxCount] && MyGdxGame.getPlayer().getDeathChange()) {
@@ -536,13 +535,14 @@ public class Grid {
                                 MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval() - 0.0002);
                             }
                     }
-                    } else if (MyGdxGame.getPlayer().getDeathChange()) {
+                    }
+                    else if (MyGdxGame.getPlayer().getDeathChange()) {
                         MyGdxGame.getPlayer().setDead(true);
                     }
                 }
-                if (bounceBlock[boxCount]) {
-                    bounceBlock[boxCount] = false;
-                }
+            }
+            if (bounceBlock[boxCount]) {
+                bounceBlock[boxCount] = false;
             }
         }
     }

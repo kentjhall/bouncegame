@@ -58,6 +58,7 @@ public class Player {
     private Texture playerR;
     private Texture playerL;
     private Sound bounceSound;
+    private boolean playBounceSound;
 
     private enum Direction{
         UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
@@ -101,6 +102,7 @@ public class Player {
         prefs.putInteger("gamesPlayed", prefs.getInteger("gamesPlayed")+1);
         locDust=new Vector2(0, 0);
         bounceSound=Gdx.audio.newSound(Gdx.files.internal("sounds/bounce.mp3"));
+        playBounceSound=true;
 
         dust=new TextureRegion[9];
         for (int i=0; i<dust.length; i++){
@@ -164,6 +166,7 @@ public class Player {
 
         if (!deathChange && width > maxWidth / 2 && height > maxHeight/2) {
             deathChange = true;
+            playBounceSound=true;
         }
 
         wrap();
@@ -174,7 +177,6 @@ public class Player {
         //checks if player hit ground
         if (width<=minWidth && height<=minHeight){
             hitGround=true;
-            bounceSound.play(1f);
         }
         else{
             hitGround=false;
@@ -283,6 +285,10 @@ public class Player {
                 growing=true;
                 playDust=true;
                 locDust=new Vector2(locPlayer);
+                if (playBounceSound) {
+                    bounceSound.play(0.5f);
+                    playBounceSound=false;
+                }
             }
         }
 

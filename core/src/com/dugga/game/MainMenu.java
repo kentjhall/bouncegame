@@ -46,7 +46,7 @@ public class MainMenu {
         phoneWidth=78;
         phoneHeight=137;
         bg=new Texture("bg.png");
-        circle=new Texture("player/center.png");
+        circle=new Texture("circle.png");
         circleOutline=new Texture("circleOutline.png");
         phone=new Texture("phone.png");
         upArrow=new Texture("upArrow.png");
