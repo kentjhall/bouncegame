@@ -67,6 +67,11 @@ public class DeathMenu {
         MyGdxGame.getScoreFont3().draw(batch, "Best:" + MyGdxGame.getPlayer().getPrefs().getInteger("highScore"), restartButton.getLocX() - MyGdxGame.getHighScoreLayout().width / 2, (float) (restartButton.getLocY() + 267));
     }
 
+    public void dispose(){
+        restartButton.dispose();
+        menuImg.dispose();
+    }
+
     public int getWidth(){
         return width;
     }

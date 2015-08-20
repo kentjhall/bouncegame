@@ -100,6 +100,10 @@ public class Button {
         }
     }
 
+    public void dispose(){
+        buttonImg.dispose();
+    }
+
     public int getLocX(){
         return locX;
     }

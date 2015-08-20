@@ -2,6 +2,7 @@ package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -56,6 +57,7 @@ public class Player {
     private Texture playerD;
     private Texture playerR;
     private Texture playerL;
+    private Sound bounceSound;
 
     private enum Direction{
         UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
@@ -98,6 +100,7 @@ public class Player {
         startingHighScore=prefs.getInteger("highScore");
         prefs.putInteger("gamesPlayed", prefs.getInteger("gamesPlayed")+1);
         locDust=new Vector2(0, 0);
+        bounceSound=Gdx.audio.newSound(Gdx.files.internal("sounds/bounce.mp3"));
 
         dust=new TextureRegion[9];
         for (int i=0; i<dust.length; i++){
@@ -171,6 +174,7 @@ public class Player {
         //checks if player hit ground
         if (width<=minWidth && height<=minHeight){
             hitGround=true;
+            bounceSound.play(1f);
         }
         else{
             hitGround=false;
@@ -327,6 +331,19 @@ public class Player {
             stateTime=0f;
             playDust=false;
         }
+    }
+
+    public void dispose(){
+        playerC.dispose();
+        playerBL.dispose();
+        playerTL.dispose();
+        playerBR.dispose();
+        playerTR.dispose();
+        playerL.dispose();
+        playerR.dispose();
+        playerU.dispose();
+        playerD.dispose();
+        bounceSound.dispose();
     }
 
     public boolean getHitGround(){

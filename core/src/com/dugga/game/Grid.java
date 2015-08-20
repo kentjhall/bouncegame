@@ -24,7 +24,7 @@ public class Grid {
     private int boxCount;
     private Rectangle[] hitBox;
     private int[] rand;
-    private int randTwinkle;
+    //private int randTwinkle;
     private Random generator;
     private int hitX;
     private int hitY;
@@ -41,11 +41,11 @@ public class Grid {
     private Sprite bounceSquare;
     private int emptyBox;
     private int bounceCount;
-    private Texture twinkle1;
-    private Texture twinkle2;
-    private int twinkleCount;
-    private boolean twinkleOn;
-    private int twinkleGo;
+//    private Texture twinkle1;
+//    private Texture twinkle2;
+//    private int twinkleCount;
+//    private boolean twinkleOn;
+//    private int twinkleGo;
 
     public Grid(int locX, int locY, int width){
         this.width=width;
@@ -61,10 +61,10 @@ public class Grid {
         growWidth=0;
         growHeight=0;
         bounceCount=0;
-        twinkleCount=0;
-        twinkleOn=true;
-        twinkle1=new Texture("twinkle/twinkle1.png");
-        twinkle2=new Texture("twinkle/twinkle2.png");
+//        twinkleCount=0;
+//        twinkleOn=true;
+//        twinkle1=new Texture("twinkle/twinkle1.png");
+//        twinkle2=new Texture("twinkle/twinkle2.png");
         //initialize rand, randTwinkle, and bounceBlock
         for(int i=0; i<rand.length;i++){
             rand[i]=2;
@@ -101,13 +101,13 @@ public class Grid {
         updateGround();
         blockTransition();
 
-        if (twinkleCount<10){
-            twinkleCount++;
-        }
-        else if (twinkleCount>=10){
-            twinkleOn=!twinkleOn;
-            twinkleCount=0;
-        }
+//        if (twinkleCount<10){
+//            twinkleCount++;
+//        }
+//        else if (twinkleCount>=10){
+//            twinkleOn=!twinkleOn;
+//            twinkleCount=0;
+//        }
     }
 
     public void createHitBoxes(int width, int height, SpriteBatch batch) {
@@ -510,15 +510,15 @@ public class Grid {
                 bounceSquare.draw(batch);
                 bounceBlock[boxCount] = true;
             }
-            else if (rand[boxCount] != 0 && emptyBox != boxCount){
-                if (randTwinkle == boxCount && twinkleGo==0) {
-                    if (twinkleOn) {
-                        batch.draw(twinkle1, hitX + width / 2 - 45 / 2, hitY + height / 2 - 55 / 2, 45, 55);
-                    } else {
-                        batch.draw(twinkle2, hitX + width / 2 - 45 / 2, hitY + height / 2 - 55 / 2, 45, 55);
-                    }
-                }
-            }
+//            else if (rand[boxCount] != 0 && emptyBox != boxCount){
+//                if (randTwinkle == boxCount && twinkleGo==0) {
+//                    if (twinkleOn) {
+//                        batch.draw(twinkle1, hitX + width / 2 - 45 / 2, hitY + height / 2 - 55 / 2, 45, 55);
+//                    } else {
+//                        batch.draw(twinkle2, hitX + width / 2 - 45 / 2, hitY + height / 2 - 55 / 2, 45, 55);
+//                    }
+//                }
+//            }
 
             hitBox[boxCount] = new Rectangle(hitX, hitY, width, height);
 
@@ -535,9 +535,9 @@ public class Grid {
                                 MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
                                 MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval() - 0.0002);
                             }
-                        } else if (MyGdxGame.getPlayer().getDeathChange()) {
-                            MyGdxGame.getPlayer().setDead(true);
-                        }
+                    }
+                    } else if (MyGdxGame.getPlayer().getDeathChange()) {
+                        MyGdxGame.getPlayer().setDead(true);
                     }
                 }
                 if (bounceBlock[boxCount]) {
@@ -576,13 +576,11 @@ public class Grid {
             for (int i = 0; i < rand.length; i++) {
                 rand[i] = generator.nextInt(blockRarity);
             }
-            //checks if no blocks appear, will add a random block if so
-            if (!checkForBlocks()){
-                rand[generator.nextInt(45)] = 0;
-            }
+            //add random block, just in case none appear
+            rand[generator.nextInt(45)] = 0;
 
-            randTwinkle=generator.nextInt(45);
-            twinkleGo=generator.nextInt(2);
+            //randTwinkle=generator.nextInt(45);
+            //twinkleGo=generator.nextInt(2);
         }
 
         //makes pattern appear every ten points
@@ -602,8 +600,8 @@ public class Grid {
                     makePattern(tenPattern);
                     break;
             }
-            randTwinkle=generator.nextInt(45);
-            twinkleGo=generator.nextInt(2);
+//            randTwinkle=generator.nextInt(45);
+//            twinkleGo=generator.nextInt(2);
         }
     }
 
@@ -620,18 +618,8 @@ public class Grid {
             }
     }
 
-    public boolean checkForBlocks(){
-        for (int i=0; i<bounceBlock.length; i++){
-            if (bounceBlock[i]){
-                bounceCount++;
-            }
-        }
-        if (bounceCount==0){
-            return false;
-        }
-        else{
-            return true;
-        }
+    public void dispose(){
+        square.dispose();
     }
 
     public void setGrowWidth(double growWidth){

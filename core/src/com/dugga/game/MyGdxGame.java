@@ -1,5 +1,6 @@
 package com.dugga.game;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -214,6 +215,17 @@ public class MyGdxGame extends Game {
     @Override
     public void dispose(){
         batch.dispose();
+        player.dispose();
+        grid.dispose();
+        deathMenu.dispose();
+        mainMenu.dispose();
+
+        splashImg.dispose();
+        scoreFont.dispose();
+        scoreFont2.dispose();
+        scoreFont3.dispose();
+        endFont.dispose();
+        endFont2.dispose();
     }
 
     public static Player getPlayer(){

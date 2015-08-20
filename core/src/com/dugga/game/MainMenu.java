@@ -126,6 +126,18 @@ public class MainMenu {
         }
     }
 
+    public void dispose(){
+        bg.dispose();
+        circle.dispose();
+        circleOutline.dispose();
+        phone.dispose();
+        upArrow.dispose();
+        downArrow.dispose();
+        check.dispose();
+        titleFont.dispose();
+        tiltFont.dispose();
+    }
+
     public boolean getStart(){
         return start;
     }
