@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -36,6 +37,7 @@ public class MainMenu {
     private int count;
     private Vector2 phoneLoc;
     private boolean playerSet;
+    private Sound startSound;
 
     public MainMenu(){
         start=false;
@@ -58,6 +60,7 @@ public class MainMenu {
         highScoreLayout=new GlyphLayout();
         gamesPlayedLayout=new GlyphLayout();
         playerSet=true;
+        startSound=Gdx.audio.newSound(Gdx.files.internal("sounds/ding.mp3"));
 
         titleLayout=new GlyphLayout();
         titleLayout2=new GlyphLayout();
@@ -122,6 +125,7 @@ public class MainMenu {
         //executes when circle is big enough, initiating play
         if (circleWidth>=300 && circleHeight>= 300){
             MyGdxGame.reset();
+            startSound.play(1f);
             start=true;
         }
     }
@@ -136,6 +140,7 @@ public class MainMenu {
         check.dispose();
         titleFont.dispose();
         tiltFont.dispose();
+        startSound.dispose();
     }
 
     public boolean getStart(){
