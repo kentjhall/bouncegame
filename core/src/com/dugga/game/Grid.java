@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -36,14 +37,24 @@ public class Grid {
     private ArrayList<Integer> devPattern;
     private ArrayList<Integer> exPattern;
     private ArrayList<Integer> xPattern;
-    private Texture square;
+    private Texture squareBck;
+    private Texture squareBue;
+    private Texture squareG;
+    private Texture squareI;
+    private Texture squareO;
+    private Texture squareP;
+    private Texture squareR;
+    private Texture squareY;
     private double growWidth;
     private double growHeight;
     private boolean growing;
     private TextureAtlas.AtlasRegion region;
     private Sprite bounceSquare;
     private int emptyBox;
-    private int bounceCount;
+    private boolean changeColor;
+    private int randColor;
+    private Sound colorSound;
+    private boolean playColorSound;
 //    private Texture twinkle1;
 //    private Texture twinkle2;
 //    private int twinkleCount;
@@ -63,10 +74,19 @@ public class Grid {
         devPattern=new ArrayList<Integer>(Arrays.asList(25, 28, 30, 32, 0, 1, 5, 7, 10, 13, 22, 24, 37, 38, 39, 42, 44));
         exPattern=new ArrayList<Integer>(Arrays.asList(1, 3, 6, 8, 11, 13, 21, 23));
         xPattern=new ArrayList<Integer>(Arrays.asList(0, 4, 6, 8, 12, 16, 18, 20, 24));
-        square=new Texture("square.png");
+        squareBck=new Texture("square/squareBlack.png");
+        squareBue=new Texture("square/squareBlue.png");
+        squareG=new Texture("square/squareGreen.png");
+        squareI=new Texture("square/squareIndigo.png");
+        squareO=new Texture("square/squareOrange.png");
+        squareP=new Texture("square/squarePurple.png");
+        squareR=new Texture("square/squareRed.png");
+        squareY=new Texture("square/squareYellow.png");
         growWidth=0;
         growHeight=0;
-        bounceCount=0;
+        changeColor=false;
+        colorSound=Gdx.audio.newSound(Gdx.files.internal("sounds/blink.mp3"));
+        playColorSound=false;
 //        twinkleCount=0;
 //        twinkleOn=true;
 //        twinkle1=new Texture("twinkle/twinkle1.png");
@@ -114,6 +134,12 @@ public class Grid {
 //            twinkleOn=!twinkleOn;
 //            twinkleCount=0;
 //        }
+
+        for (int i=1; i<9; i++) {
+            if (MyGdxGame.getPlayer().getScore() == 10*i + 1){
+                playColorSound=true;
+            }
+        }
     }
 
     public void createHitBoxes(int width, int height, SpriteBatch batch) {
@@ -507,12 +533,77 @@ public class Grid {
             }
 
             if (rand[boxCount] == 0 && emptyBox != boxCount) {
-                region = new TextureAtlas.AtlasRegion(square, hitX, hitY, width, height);
-                bounceSquare = new Sprite(region);
+                if (!changeColor) {
+                    region = new TextureAtlas.AtlasRegion(squareBck, hitX, hitY, width, height);
+                    bounceSquare = new Sprite(region);
+                    bounceSquare.setOriginCenter();
+                    bounceSquare.setPosition(hitX, hitY);
+                    bounceSquare.setScale((float) growWidth, (float) growHeight);
+                }
+                if (growing) {
+                    if (MyGdxGame.getPlayer().getScore() > 10) {
+                        changeColor=true;
+                        region = new TextureAtlas.AtlasRegion(squareR, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 20) {
+                        region = new TextureAtlas.AtlasRegion(squareO, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 30) {
+                        region = new TextureAtlas.AtlasRegion(squareY, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 40) {
+                        region = new TextureAtlas.AtlasRegion(squareG, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 50) {
+                        region = new TextureAtlas.AtlasRegion(squareBue, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 60) {
+                        region = new TextureAtlas.AtlasRegion(squareI, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 70) {
+                        region = new TextureAtlas.AtlasRegion(squareP, hitX, hitY, width, height);
+                        bounceSquare = new Sprite(region);
+                    }
+                    if (MyGdxGame.getPlayer().getScore() > 80) {
+                        if (randColor==0){
+                            region = new TextureAtlas.AtlasRegion(squareR, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==1){
+                            region = new TextureAtlas.AtlasRegion(squareO, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==2){
+                            region = new TextureAtlas.AtlasRegion(squareY, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==3){
+                            region = new TextureAtlas.AtlasRegion(squareG, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==4){
+                            region = new TextureAtlas.AtlasRegion(squareBue, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==5){
+                            region = new TextureAtlas.AtlasRegion(squareI, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                        else if (randColor==6){
+                            region = new TextureAtlas.AtlasRegion(squareP, hitX, hitY, width, height);
+                            bounceSquare = new Sprite(region);
+                        }
+                    }
+                }
                 bounceSquare.setOriginCenter();
                 bounceSquare.setPosition(hitX, hitY);
                 bounceSquare.setScale((float) growWidth, (float) growHeight);
-                bounceSquare.setColor(Color.RED);
                 bounceSquare.draw(batch);
                 bounceBlock[boxCount] = true;
             }
@@ -539,6 +630,10 @@ public class Grid {
                             if (MyGdxGame.getPlayer().getBounceSpeed() <= 10) {
                                 MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
                                 MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval() - 0.0002);
+//                                if (playColorSound) {
+//                                    colorSound.play(1f);
+//                                    playColorSound=false;
+//                                }
                             }
                     }
                     }
@@ -587,6 +682,7 @@ public class Grid {
 
             //randTwinkle=generator.nextInt(45);
             //twinkleGo=generator.nextInt(2);
+            randColor=generator.nextInt(7);
         }
 
         //makes pattern appear every ten points
@@ -617,6 +713,7 @@ public class Grid {
             }
 //            randTwinkle=generator.nextInt(45);
 //            twinkleGo=generator.nextInt(2);
+            randColor=generator.nextInt(7);
         }
     }
 
@@ -634,7 +731,15 @@ public class Grid {
     }
 
     public void dispose(){
-        square.dispose();
+        squareBck.dispose();
+        squareBue.dispose();
+        squareG.dispose();
+        squareI.dispose();
+        squareO.dispose();
+        squareP.dispose();
+        squareR.dispose();
+        squareY.dispose();
+        colorSound.dispose();
     }
 
     public void setGrowWidth(double growWidth){
