@@ -1,6 +1,7 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +30,7 @@ public class Button {
     private InputProcessor inputProcessor;
     private boolean buttonDown;
     private boolean goButton;
+    private Sound buttonSound;
     public Button(Type buttonType, int locX, int locY){
         width = 540;
         height=240;
@@ -53,6 +55,7 @@ public class Button {
         buttonDown=false;
         doneGrowing=false;
         goButton=false;
+        buttonSound=Gdx.audio.newSound(Gdx.files.internal("sounds/boop.wav"));
     }
 
     public void draw(SpriteBatch batch){
@@ -79,6 +82,7 @@ public class Button {
                         growWidth -= 0.1;
                         growHeight -= 0.1;
                         buttonDown = true;
+                        buttonSound.play(0.5f);
                     }
                 }
                 if (inputProcessor.touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, 0)){
@@ -93,6 +97,7 @@ public class Button {
                             MyGdxGame.getMainMenu().setCircleWidth(0);
                             MyGdxGame.getMainMenu().setCircleHeight(0);
                             MyGdxGame.getMainMenu().setPlayerSet(true);
+                            MyGdxGame.getDeathMenu().dispose();
                         }
                     }
                 }
@@ -102,6 +107,7 @@ public class Button {
 
     public void dispose(){
         buttonImg.dispose();
+        buttonSound.dispose();
     }
 
     public int getLocX(){

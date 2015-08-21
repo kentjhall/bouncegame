@@ -33,6 +33,9 @@ public class Grid {
     private ArrayList<Integer> gjPattern;
     private ArrayList<Integer> smilePattern;
     private ArrayList<Integer> tenPattern;
+    private ArrayList<Integer> devPattern;
+    private ArrayList<Integer> exPattern;
+    private ArrayList<Integer> xPattern;
     private Texture square;
     private double growWidth;
     private double growHeight;
@@ -57,6 +60,9 @@ public class Grid {
         gjPattern=new ArrayList<Integer>(Arrays.asList(25, 26, 27, 30, 0, 5, 6, 7, 2, 17, 18, 19, 21, 23, 36, 38, 41, 42, 43));
         smilePattern=new ArrayList<Integer>(Arrays.asList(31, 1, 33, 3, 20, 36, 37, 38, 24));
         tenPattern=new ArrayList<Integer>(Arrays.asList(25, 30, 0, 27, 28, 29, 32, 34, 2, 3, 4, 10, 11, 12, 13, 14, 20, 35, 40, 22, 23, 24, 37, 39, 42, 43, 44));
+        devPattern=new ArrayList<Integer>(Arrays.asList(25, 28, 30, 32, 0, 1, 5, 7, 10, 13, 22, 24, 37, 38, 39, 42, 44));
+        exPattern=new ArrayList<Integer>(Arrays.asList(1, 3, 6, 8, 11, 13, 21, 23));
+        xPattern=new ArrayList<Integer>(Arrays.asList(0, 4, 6, 8, 12, 16, 18, 20, 24));
         square=new Texture("square.png");
         growWidth=0;
         growHeight=0;
@@ -558,7 +564,7 @@ public class Grid {
     }
 
     public void updateGround(){
-        final int patternChange=generator.nextInt(3);
+        final int patternChange=generator.nextInt(6);
         if (MyGdxGame.getPlayer().getHitGround()) {
             Timer.schedule(new Timer.Task() {
                 @Override
@@ -598,6 +604,15 @@ public class Grid {
                     break;
                 case 2:
                     makePattern(tenPattern);
+                    break;
+                case 3:
+                    makePattern(devPattern);
+                    break;
+                case 4:
+                    makePattern(exPattern);
+                    break;
+                case 5:
+                    makePattern(xPattern);
                     break;
             }
 //            randTwinkle=generator.nextInt(45);

@@ -59,6 +59,8 @@ public class Player {
     private Texture playerL;
     private Sound bounceSound;
     private boolean playBounceSound;
+    private Sound fallSound;
+    private boolean playFallSound;
 
     private enum Direction{
         UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
@@ -101,8 +103,10 @@ public class Player {
         startingHighScore=prefs.getInteger("highScore");
         prefs.putInteger("gamesPlayed", prefs.getInteger("gamesPlayed")+1);
         locDust=new Vector2(0, 0);
-        bounceSound=Gdx.audio.newSound(Gdx.files.internal("sounds/bounce.mp3"));
+        bounceSound=Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
         playBounceSound=true;
+        fallSound=Gdx.audio.newSound(Gdx.files.internal("sounds/fall.wav"));
+        playFallSound=true;
 
         dust=new TextureRegion[9];
         for (int i=0; i<dust.length; i++){
@@ -167,6 +171,7 @@ public class Player {
         if (!deathChange && width > maxWidth / 2 && height > maxHeight/2) {
             deathChange = true;
             playBounceSound=true;
+            playFallSound=true;
         }
 
         wrap();
@@ -280,6 +285,12 @@ public class Player {
             if (dead){
                 deathChange=false;
                 growing=false;
+                if (width<minWidth/4 && height<minHeight/4) {
+                    if (playFallSound) {
+                        fallSound.play(1f);
+                        playFallSound = false;
+                    }
+                }
             }
             else if (!dead){
                 growing=true;
@@ -350,6 +361,7 @@ public class Player {
         playerU.dispose();
         playerD.dispose();
         bounceSound.dispose();
+        fallSound.dispose();
     }
 
     public boolean getHitGround(){
