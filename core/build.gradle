@@ -8,6 +8,7 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    compile 'com.google.android.gms:play-services:7.8.0'
 }
 
 eclipse.project {

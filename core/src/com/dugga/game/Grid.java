@@ -1,14 +1,11 @@
 package com.dugga.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
@@ -53,8 +50,6 @@ public class Grid {
     private int emptyBox;
     private boolean changeColor;
     private int randColor;
-    private Sound colorSound;
-    private boolean playColorSound;
 //    private Texture twinkle1;
 //    private Texture twinkle2;
 //    private int twinkleCount;
@@ -85,8 +80,6 @@ public class Grid {
         growWidth=0;
         growHeight=0;
         changeColor=false;
-        colorSound=Gdx.audio.newSound(Gdx.files.internal("sounds/blink.mp3"));
-        playColorSound=false;
 //        twinkleCount=0;
 //        twinkleOn=true;
 //        twinkle1=new Texture("twinkle/twinkle1.png");
@@ -122,7 +115,7 @@ public class Grid {
         }
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         createHitBoxes(width / 5, height / 5, batch);
         updateGround();
         blockTransition();
@@ -134,12 +127,6 @@ public class Grid {
 //            twinkleOn=!twinkleOn;
 //            twinkleCount=0;
 //        }
-
-        for (int i=1; i<9; i++) {
-            if (MyGdxGame.getPlayer().getScore() == 10*i + 1){
-                playColorSound=true;
-            }
-        }
     }
 
     public void createHitBoxes(int width, int height, SpriteBatch batch) {
@@ -630,12 +617,8 @@ public class Grid {
                             if (MyGdxGame.getPlayer().getBounceSpeed() <= 10) {
                                 MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
                                 MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval() - 0.0002);
-//                                if (playColorSound) {
-//                                    colorSound.play(1f);
-//                                    playColorSound=false;
-//                                }
                             }
-                    }
+                        }
                     }
                     else if (MyGdxGame.getPlayer().getDeathChange()) {
                         MyGdxGame.getPlayer().setDead(true);
@@ -739,7 +722,6 @@ public class Grid {
         squareP.dispose();
         squareR.dispose();
         squareY.dispose();
-        colorSound.dispose();
     }
 
     public void setGrowWidth(double growWidth){
