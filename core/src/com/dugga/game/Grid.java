@@ -3,6 +3,8 @@ package com.dugga.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -50,6 +52,10 @@ public class Grid {
     private int emptyBox;
     private boolean changeColor;
     private int randColor;
+    private boolean drawInstruct;
+    private GlyphLayout moveLayout;
+    private BitmapFont moveFont;
+    private double fontAlpha;
 //    private Texture twinkle1;
 //    private Texture twinkle2;
 //    private int twinkleCount;
@@ -79,7 +85,12 @@ public class Grid {
         squareY=new Texture("square/squareYellow.png");
         growWidth=0;
         growHeight=0;
+        fontAlpha=0;
         changeColor=false;
+        drawInstruct=true;
+        moveLayout=new GlyphLayout();
+        moveFont=new BitmapFont(Gdx.files.internal("fonts/scoreFont3.fnt"),Gdx.files.internal("fonts/scoreFont3.png"),false);
+        moveLayout.setText(moveFont, "Tilt to Move");
 //        twinkleCount=0;
 //        twinkleOn=true;
 //        twinkle1=new Texture("twinkle/twinkle1.png");
@@ -119,6 +130,24 @@ public class Grid {
         createHitBoxes(width / 5, height / 5, batch);
         updateGround();
         blockTransition();
+
+        if (drawInstruct) {
+            moveFont.setColor(1, 1, 1, (float)fontAlpha);
+            moveFont.draw(batch, "Tilt to Move", Gdx.graphics.getWidth() / 2 - moveLayout.width / 2, Gdx.graphics.getHeight() - 200 - moveLayout.height / 2);
+
+            if (fontAlpha<0.7 && MyGdxGame.getPlayer().getScore()<=1 && !MyGdxGame.getPlayer().getDead()){
+                fontAlpha+=0.05;
+            }
+        }
+
+        if (MyGdxGame.getPlayer().getScore()>1 || MyGdxGame.getPlayer().getDead()){
+            if (fontAlpha>0){
+                fontAlpha-=0.1;
+            }
+            else if (fontAlpha<=0) {
+                drawInstruct = false;
+            }
+        }
 
 //        if (twinkleCount<10){
 //            twinkleCount++;
@@ -617,6 +646,7 @@ public class Grid {
                             if (MyGdxGame.getPlayer().getBounceSpeed() <= 10) {
                                 MyGdxGame.getPlayer().setBounceSpeed(MyGdxGame.getPlayer().getBounceSpeed() + 0.08);
                                 MyGdxGame.getPlayer().setDustInterval(MyGdxGame.getPlayer().getDustInterval() - 0.0002);
+                                MyGdxGame.getPlayer().setSpeedRatio(MyGdxGame.getPlayer().getSpeedRatio()+0.002);
                             }
                         }
                     }
@@ -722,6 +752,7 @@ public class Grid {
         squareP.dispose();
         squareR.dispose();
         squareY.dispose();
+        moveFont.dispose();
     }
 
     public void setGrowWidth(double growWidth){

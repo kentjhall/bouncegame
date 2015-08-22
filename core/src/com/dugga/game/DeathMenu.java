@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Created by kenthall on 8/8/15.
  */
-public class DeathMenu {
+public class DeathMenu{
     private Texture menuImg;
     private int width;
     private int height;
@@ -22,6 +22,8 @@ public class DeathMenu {
     private Sprite menuSprite;
     private int count;
     private boolean scoreWhite;
+    private boolean showAd;
+
     public DeathMenu(){
         menuImg=new Texture("menu.png");
         width = 810;
@@ -33,9 +35,14 @@ public class DeathMenu {
         menuSprite=new Sprite(menuImg, width, height);
         menuSprite.setOriginCenter();
         menuSprite.setPosition(loc.x, loc.y);
+        showAd=true;
     }
 
     public void draw(SpriteBatch batch){
+        if (showAd) {
+            MyGdxGame.getRequestHandler().showAds(IActivityRequestHandler.adState.SHOW);
+            showAd=false;
+        }
         MyGdxGame.getScoreFont3().getData().setScale((float)growWidth, (float)growHeight);
         menuSprite.setScale((float)growWidth, (float)growHeight);
         menuSprite.draw(batch);

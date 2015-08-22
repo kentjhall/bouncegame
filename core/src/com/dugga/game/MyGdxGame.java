@@ -1,6 +1,6 @@
 package com.dugga.game;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 
-public class MyGdxGame extends Game {
+public class MyGdxGame extends ApplicationAdapter {
 	private static SpriteBatch batch;
     private SpriteBatch splashBatch;
     private static MainMenu mainMenu;
@@ -37,8 +37,13 @@ public class MyGdxGame extends Game {
     private Texture splashImg;
     private double splashAlpha;
     private double batchAlpha;
+    private static IActivityRequestHandler requestHandler;
     public enum ScoreType{
         SCORE, END
+    }
+
+    public MyGdxGame(IActivityRequestHandler handler) {
+        requestHandler = handler;
     }
 
 	@Override
@@ -277,6 +282,10 @@ public class MyGdxGame extends Game {
 
     public static GlyphLayout getEndFontLayout(){
         return endFontLayout;
+    }
+
+    public static IActivityRequestHandler getRequestHandler(){
+        return requestHandler;
     }
 
 }

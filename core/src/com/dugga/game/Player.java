@@ -61,6 +61,7 @@ public class Player {
     private boolean playBounceSound;
     private Sound fallSound;
     private boolean playFallSound;
+    private double speedRatio;
 
     private enum Direction{
         UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
@@ -83,7 +84,8 @@ public class Player {
         startAccelY=0;
         initialBounceSpeed=2;
         bounceSpeed=initialBounceSpeed;
-        moveSpeed=bounceSpeed*0.5;
+        speedRatio=0.5;
+        moveSpeed=bounceSpeed*speedRatio;
         dead=false;
         playerC=new Texture("player/center.png");
         playerBL=new Texture("player/bottomleft.png");
@@ -193,7 +195,7 @@ public class Player {
         accelX = Gdx.input.getAccelerometerX();
         accelY = Gdx.input.getAccelerometerY();
 
-        moveSpeed=bounceSpeed*0.5;
+        moveSpeed=bounceSpeed*speedRatio;
 
         if ((int)accelX==(int)startAccelX){
             velPlayer.x=0*(float)moveSpeed;
@@ -438,5 +440,13 @@ public class Player {
 
     public double getInitialBounceSpeed(){
         return initialBounceSpeed;
+    }
+
+    public void setSpeedRatio(double speedRatio){
+        this.speedRatio=speedRatio;
+    }
+
+    public double getSpeedRatio(){
+        return speedRatio;
     }
 }

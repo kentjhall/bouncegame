@@ -98,6 +98,7 @@ public class Button {
                             MyGdxGame.getMainMenu().setCircleHeight(0);
                             MyGdxGame.getMainMenu().setPlayerSet(true);
                             MyGdxGame.getDeathMenu().dispose();
+                            MyGdxGame.getRequestHandler().showAds(IActivityRequestHandler.adState.HIDE);
                         }
                     }
                 }
