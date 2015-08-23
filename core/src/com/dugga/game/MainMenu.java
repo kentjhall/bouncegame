@@ -89,10 +89,10 @@ public class MainMenu {
         highScoreLayout.setText(MyGdxGame.getScoreFont(), "High Score:"+MyGdxGame.getPlayer().getPrefs().getInteger("highScore"));
         gamesPlayedLayout.setText(MyGdxGame.getScoreFont(), "Games Played:"+MyGdxGame.getPlayer().getPrefs().getInteger("gamesPlayed"));
 
-        titleLayout.setText(titleFont, "Bouncing");
-        titleLayout2.setText(titleFont, "Circle");
-        titleFont.draw(batch, "Bouncing", Gdx.graphics.getWidth() / 2 - titleLayout.width / 2, Gdx.graphics.getHeight() - 100 - titleLayout.height / 2);
-        titleFont.draw(batch, "Circle", Gdx.graphics.getWidth() / 2 - titleLayout2.width / 2, Gdx.graphics.getHeight() - (float) (titleLayout.height * 2.3) - titleLayout2.height / 2);
+        titleLayout.setText(titleFont, "Bouncy");
+        titleLayout2.setText(titleFont, "Stan");
+        titleFont.draw(batch, "Bouncy", Gdx.graphics.getWidth() / 2 - titleLayout.width / 2, Gdx.graphics.getHeight() - 100 - titleLayout.height / 2);
+        titleFont.draw(batch, "Stan", Gdx.graphics.getWidth() / 2 - titleLayout2.width / 2, Gdx.graphics.getHeight() - (float) (titleLayout.height * 2.3) - titleLayout2.height / 2);
 
         tiltLayout.setText(tiltFont, "Tilt Flat to Play!");
         tiltFont.getData().setScale(1, (float) 1.3);
@@ -101,7 +101,7 @@ public class MainMenu {
         MyGdxGame.getScoreFont().draw(batch, "High Score:" + MyGdxGame.getPlayer().getPrefs().getInteger("highScore"), phoneLoc.x - highScoreLayout.width / 2, 200);
         MyGdxGame.getScoreFont().draw(batch, "Games Played:" + MyGdxGame.getPlayer().getPrefs().getInteger("gamesPlayed"), phoneLoc.x - gamesPlayedLayout.width / 2, 100);
 
-        if (0==0){
+        if ((int)Gdx.input.getAccelerometerY()<=1 && (int)Gdx.input.getAccelerometerY()>=-1){
             batch.draw(check, phoneLoc.x-phoneWidth/2, phoneLoc.y+(float)(phoneHeight/4.125), phoneWidth, phoneWidth);
             if (circleWidth<300 && circleHeight<300){
                 circleWidth+=5;

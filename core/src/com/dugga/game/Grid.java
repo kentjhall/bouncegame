@@ -90,7 +90,8 @@ public class Grid {
         drawInstruct=true;
         moveLayout=new GlyphLayout();
         moveFont=new BitmapFont(Gdx.files.internal("fonts/scoreFont3.fnt"),Gdx.files.internal("fonts/scoreFont3.png"),false);
-        moveLayout.setText(moveFont, "Tilt to Move");
+        moveFont.getData().setScale(0.75f, 0.9f);
+        moveLayout.setText(moveFont, "Tilt to Move Stan");
 //        twinkleCount=0;
 //        twinkleOn=true;
 //        twinkle1=new Texture("twinkle/twinkle1.png");
@@ -133,7 +134,7 @@ public class Grid {
 
         if (drawInstruct) {
             moveFont.setColor(1, 1, 1, (float)fontAlpha);
-            moveFont.draw(batch, "Tilt to Move", Gdx.graphics.getWidth() / 2 - moveLayout.width / 2, Gdx.graphics.getHeight() - 200 - moveLayout.height / 2);
+            moveFont.draw(batch, "Tilt to Move Stan", Gdx.graphics.getWidth() / 2 - moveLayout.width / 2, Gdx.graphics.getHeight() - 200 - moveLayout.height / 2);
 
             if (fontAlpha<0.7 && MyGdxGame.getPlayer().getScore()<=1 && !MyGdxGame.getPlayer().getDead()){
                 fontAlpha+=0.05;

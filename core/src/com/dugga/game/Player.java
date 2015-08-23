@@ -62,6 +62,9 @@ public class Player {
     private Sound fallSound;
     private boolean playFallSound;
     private double speedRatio;
+    private Texture circle;
+    private boolean drawCircle;
+    private boolean resetScale;
 
     private enum Direction{
         UP, DOWN, LEFT, RIGHT, UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT, STILL
@@ -96,6 +99,7 @@ public class Player {
         playerD=new Texture("player/down.png");
         playerR=new Texture("player/right.png");
         playerL=new Texture("player/left.png");
+        circle=new Texture("circle.png");
         scoring=false;
         hitBox=new Rectangle();
         player=new Sprite(playerC);
@@ -109,6 +113,8 @@ public class Player {
         playBounceSound=true;
         fallSound=Gdx.audio.newSound(Gdx.files.internal("sounds/fall.wav"));
         playFallSound=true;
+        drawCircle=true;
+        resetScale=true;
 
         dust=new TextureRegion[9];
         for (int i=0; i<dust.length; i++){
@@ -121,12 +127,29 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch){
+        if (MyGdxGame.getMainMenu().getStart() && resetScale){
+            width=0;
+            height=0;
+            resetScale=false;
+        }
         if(playDust){
             playDustAnimation(batch);
             dustAnimation.setFrameDuration((float)dustInterval);
         }
+        if (drawCircle) {
+            batch.draw(circle, locPlayer.x - (float) maxWidth / 2, locPlayer.y - (float) maxHeight / 2);
+            if (width<maxWidth && height<maxHeight){
+                width+=40;
+                height+=40;
+            }
+            else if (width>=maxWidth && height>=maxHeight){
+                drawCircle=false;
+            }
+        }
+
         player.setPosition(locPlayer.x - (float) width / 2, locPlayer.y - (float) height / 2);
         player.setSize((float) width, (float) height);
+
         switch(playerDirection){
             case STILL:
                 player.setTexture(playerC);
@@ -182,7 +205,7 @@ public class Player {
         bounce();
 
         //checks if player hit ground
-        if (width<=minWidth && height<=minHeight){
+        if (width<=minWidth && height<=minHeight && !drawCircle){
             hitGround=true;
         }
         else{
@@ -282,12 +305,12 @@ public class Player {
             growing=false;
         }
         //when ball at smallest point, start growing
-        else if (width<=minWidth && height<=minHeight){
+        else if (width<=minWidth && height<=minHeight && !drawCircle){
             scoring=true;
             if (dead){
                 deathChange=false;
                 growing=false;
-                if (width<minWidth/4 && height<minHeight/4) {
+                if (width<minWidth/4 && height<minHeight/4 && !drawCircle) {
                     if (playFallSound) {
                         fallSound.play(1f);
                         playFallSound = false;
@@ -448,5 +471,9 @@ public class Player {
 
     public double getSpeedRatio(){
         return speedRatio;
+    }
+
+    public boolean getDrawCircle(){
+        return drawCircle;
     }
 }

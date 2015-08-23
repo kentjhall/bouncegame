@@ -163,7 +163,7 @@ public class MyGdxGame extends ApplicationAdapter {
                     scoreFontScale -= 0.1;
                 }
             }
-            if (player.getWidth() <= 0 && player.getHeight() <= 0) {
+            if (player.getWidth() <= 0 && player.getHeight() <= 0 && !player.getDrawCircle()) {
                 deathMenu.draw(batch);
                 endFontLayout.setText(endFont, "" + player.getScore());
                 endFontLayout2.setText(endFont2, "" + player.getScore());
